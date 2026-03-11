@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
@@ -5,10 +7,30 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Brand & status (design system) */
+  --color-brand-black: #1C1C1E;
+  --color-brand-saffron: #FF9500;
+  --color-brand-slate: #3A3A3C;
+  --color-brand-muted: #6B7280;
+  --color-brand-border: #E5E7EB;
+  --color-brand-bg: #F9FAFB;
+  --color-status-approved: #16A34A;
+  --color-status-pending: #D97706;
+  --color-status-rejected: #DC2626;
+  --color-status-draft: #6B7280;
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  --radius-lg: 0.625rem;
+  --radius-md: 0.5rem;
+  --radius-sm: 0.375rem;
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.06), 0 1px 2px -1px rgb(0 0 0 / 0.04);
+  --shadow-panel: 0 4px 24px 0 rgb(0 0 0 / 0.08);
+  --animate-counter: counter 1.5s ease-out forwards;
+  --animate-fade-up: fadeUp 0.5s ease-out forwards;
+  /* shadcn */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -47,9 +69,17 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+@keyframes fadeUp {
+  0% { opacity: 0; transform: translateY(16px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: 249 250 251;
+  --foreground: 28 28 30;
+  --border: 229 231 235;
+  --ring: 255 149 0;
+  /* shadcn (compatible values) */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -63,9 +93,7 @@
   --accent: oklch(0.97 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.809 0.105 251.813);
   --chart-2: oklch(0.623 0.214 259.815);
   --chart-3: oklch(0.546 0.245 262.881);
@@ -118,12 +146,45 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-brand-border;
   }
+
   body {
-    @apply bg-background text-foreground;
+    @apply bg-brand-bg text-brand-slate font-sans antialiased;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display text-brand-black;
+  }
+
   html {
-    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: #F9FAFB; }
+  ::-webkit-scrollbar-thumb { background: #E5E7EB; border-radius: 999px; }
+  ::-webkit-scrollbar-thumb:hover { background: #D1D5DB; }
+}
+
+@layer components {
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .card-base {
+    @apply bg-white rounded-lg border border-brand-border shadow-card;
+  }
+
+  .section-pad {
+    @apply py-16 px-4 sm:px-6 lg:px-8;
+  }
+
+  .container-main {
+    @apply max-w-7xl mx-auto;
+  }
+
+  .num {
+    @apply font-mono text-brand-black font-semibold;
   }
 }
