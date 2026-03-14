@@ -1,11 +1,11 @@
 import { supabase } from "@/lib/supabase";
-import type { SportsAchievement } from "@/types";
+import type { Achievement } from "@/types";
 
-export async function getSportsAchievements(): Promise<SportsAchievement[]> {
+export async function getAchievements(): Promise<Achievement[]> {
   if (!supabase) return [];
 
   const { data, error } = await supabase
-    .from("sports_achievements")
+    .from("achievements")
     .select("*")
     .eq("status", "approved")
     .order("year", { ascending: false });

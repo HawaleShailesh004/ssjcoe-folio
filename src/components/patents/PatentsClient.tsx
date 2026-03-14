@@ -1,19 +1,10 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { PatentCard } from "@/components/patents/PatentCard";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Award } from "lucide-react";
 import type { Patent, Department, PatentStatus } from "@/types";
 
 interface Props {
@@ -25,9 +16,14 @@ export function PatentsClient({
   initialPatents,
   departments,
 }: Props) {
+  const [mounted, setMounted] = useState(false);
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<PatentStatus | "all">("all");
   const [deptId, setDeptId] = useState("all");
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const filtered = useMemo(() => {
     return initialPatents.filter((p) => {
@@ -49,77 +45,94 @@ export function PatentsClient({
   const hasFilters =
     search !== "" || status !== "all" || deptId !== "all";
 
-  const clearFilters = () => {
+  const clear = () => {
     setSearch("");
     setStatus("all");
     setDeptId("all");
   };
 
   return (
-    <div className="container-main section-pad">
+    <div className="container section">
       <PageHeader
         title="Patents"
         description={`${initialPatents.length} patents filed by SSJCOE faculty and students.`}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Patents" }]}
+        count={initialPatents.length}
       />
 
-      <div className="flex flex-wrap gap-3 mb-8">
-        {(["filed", "published", "granted"] as const).map((s) => {
-          const count = initialPatents.filter(
-            (p) => p.patent_status === s
-          ).length;
-          const colors = {
-            filed: "bg-blue-50 text-blue-700 border-blue-200",
-            published: "bg-amber-50 text-amber-700 border-amber-200",
-            granted: "bg-green-50 text-green-700 border-green-200",
-          };
-          return (
-            <button
-              key={s}
-              type="button"
-              onClick={() => setStatus(status === s ? "all" : s)}
-              className={`border px-4 py-2 rounded-full text-sm font-medium capitalize transition-all ${colors[s]} ${status === s ? "ring-2 ring-offset-1 ring-current" : ""}`}
-            >
-              {s} · {count}
-            </button>
-          );
-        })}
-      </div>
+      {/* Defer filter UI to avoid hydration mismatch from extensions (e.g. fdprocessedid on inputs/buttons) */}
+      {mounted ? (
+        <>
+          <div className="flex flex-wrap gap-2 mb-6">
+            {(["filed", "published", "granted"] as const).map((s) => {
+              const count = initialPatents.filter(
+                (p) => p.patent_status === s
+              ).length;
+              const active = status === s;
+              return (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => setStatus(active ? "all" : s)}
+                  className={`badge capitalize transition-all ${active ? "ring-2 ring-offset-1 ring-current" : ""} ${
+                    s === "filed"
+                      ? "badge-idle"
+                      : s === "published"
+                        ? "badge-warn"
+                        : "badge-ok"
+                  }`}
+                >
+                  {s} · {count}
+                </button>
+              );
+            })}
+          </div>
 
-      <div className="card-base p-4 mb-6">
-        <FilterBar
-          search={search}
-          onSearchChange={setSearch}
-          searchPlaceholder="Search patent title or inventor..."
-          hasActiveFilters={hasFilters}
-          onClear={clearFilters}
-          filters={
-            <Select value={deptId} onValueChange={setDeptId}>
-              <SelectTrigger className="w-40 h-9 text-sm">
-                <SelectValue placeholder="Department" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All departments</SelectItem>
+          <div className="card p-4 mb-6">
+            <FilterBar
+              search={search}
+              onSearchChange={setSearch}
+              placeholder="Search patent title or inventor..."
+              hasFilters={hasFilters}
+              onClear={clear}
+              resultCount={filtered.length}
+              resultLabel="patents"
+            >
+              <select
+                value={deptId}
+                onChange={(e) => setDeptId(e.target.value)}
+                className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+              >
+                <option value="all">All departments</option>
                 {departments.map((d) => (
-                  <SelectItem key={d.id} value={d.id}>
+                  <option key={d.id} value={d.id}>
                     {d.code}
-                  </SelectItem>
+                  </option>
                 ))}
-              </SelectContent>
-            </Select>
-          }
-        />
-      </div>
+              </select>
+            </FilterBar>
+          </div>
+        </>
+      ) : (
+        <div className="mb-6 space-y-2" aria-hidden>
+          <div className="h-9 w-48 rounded bg-ink-8" />
+          <div className="card p-4 h-14" />
+        </div>
+      )}
 
       {filtered.length === 0 ? (
         <EmptyState
           title="No patents found"
-          icon={<Award className="w-6 h-6" />}
+          description={hasFilters ? "Try adjusting your filters." : undefined}
           action={
             hasFilters ? (
-              <Button variant="outline" onClick={clearFilters}>
+              <button
+                type="button"
+                onClick={clear}
+                className="text-sm text-ink-2 hover:text-ink hover:underline"
+              >
                 Clear filters
-              </Button>
+              </button>
             ) : undefined
           }
         />

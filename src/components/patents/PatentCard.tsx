@@ -1,47 +1,35 @@
-import { Users, Hash, Calendar, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ExternalLink, Hash, Calendar } from "lucide-react";
 import type { Patent, Department } from "@/types";
 
-const STATUS_CONFIG = {
-  filed: {
-    label: "Filed",
-    className: "bg-blue-50 text-blue-700 border-blue-200",
-  },
-  published: {
-    label: "Published",
-    className: "bg-amber-50 text-amber-700 border-amber-200",
-  },
-  granted: {
-    label: "Granted",
-    className: "bg-green-50 text-green-700 border-green-200",
-  },
+const STATUS: Record<string, string> = {
+  filed: "badge badge-idle",
+  published: "badge badge-warn",
+  granted: "badge badge-ok",
 };
 
-interface Props {
+export function PatentCard({
+  patent: p,
+  department,
+}: {
   patent: Patent;
   department?: Department;
-}
-
-export function PatentCard({ patent: p, department }: Props) {
-  const statusCfg = STATUS_CONFIG[p.patent_status];
+}) {
   const inventors = Array.isArray(p.inventors) ? p.inventors : [];
 
   return (
-    <div className="card-base p-6 hover:shadow-panel transition-shadow">
+    <div className="card card-hover p-6">
       <div className="flex items-start justify-between gap-3 mb-4">
         <div className="flex flex-wrap gap-2">
-          <span
-            className={`text-xs font-medium border px-2.5 py-0.5 rounded-full ${statusCfg.className}`}
-          >
-            {statusCfg.label}
+          <span className={STATUS[p.patent_status] ?? "badge badge-idle"}>
+            {p.patent_status}
           </span>
           {department && (
-            <span className="text-xs text-brand-muted bg-brand-bg border border-brand-border px-2 py-0.5 rounded">
+            <span className="font-mono text-xs text-ink-5">
               {department.code}
             </span>
           )}
           {p.year && (
-            <span className="text-xs text-brand-muted font-mono">{p.year}</span>
+            <span className="font-mono text-xs text-ink-5">{p.year}</span>
           )}
         </div>
         {p.certificate_url && (
@@ -49,43 +37,32 @@ export function PatentCard({ patent: p, department }: Props) {
             href={p.certificate_url}
             target="_blank"
             rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-xs text-ink-2 hover:text-ink transition-colors shrink-0"
           >
-            <Button
-              variant="outline"
-              size="sm"
-              className="h-8 text-xs gap-1.5 shrink-0"
-            >
-              <ExternalLink className="w-3 h-3" /> Certificate
-            </Button>
+            <ExternalLink className="w-3 h-3" /> Certificate
           </a>
         )}
       </div>
 
-      <h3 className="font-semibold text-brand-black mb-3 leading-snug">
+      <h3 className="text-base font-medium text-ink leading-snug mb-2">
         {p.title}
       </h3>
-
       {p.description && (
-        <p className="text-sm text-brand-muted mb-4 line-clamp-2">
-          {p.description}
-        </p>
+        <p className="text-sm text-ink-4 clamp-2 mb-4">{p.description}</p>
       )}
 
-      <div className="flex flex-col gap-2 pt-3 border-t border-brand-border">
-        <div className="flex items-center gap-2 text-sm text-brand-muted">
-          <Users className="w-3.5 h-3.5 shrink-0" />
-          <span>{inventors.map(String).join(", ")}</span>
-        </div>
+      <div className="space-y-1.5 pt-4 border-t border-ink-7 text-sm text-ink-4">
+        <p>{inventors.map(String).join(", ")}</p>
         {p.patent_number && (
-          <div className="flex items-center gap-2 text-sm text-brand-muted">
-            <Hash className="w-3.5 h-3.5 shrink-0" />
-            <span className="font-mono">{p.patent_number}</span>
+          <div className="flex items-center gap-1.5">
+            <Hash className="w-3 h-3" />
+            <span className="font-mono text-xs">{p.patent_number}</span>
           </div>
         )}
         {p.date && (
-          <div className="flex items-center gap-2 text-sm text-brand-muted">
-            <Calendar className="w-3.5 h-3.5 shrink-0" />
-            <span>
+          <div className="flex items-center gap-1.5">
+            <Calendar className="w-3 h-3" />
+            <span className="text-xs">
               {new Date(p.date).toLocaleDateString("en-IN", {
                 day: "numeric",
                 month: "short",

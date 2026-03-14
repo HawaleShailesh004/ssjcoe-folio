@@ -4,80 +4,69 @@ import { useState } from "react";
 import {
   ExternalLink,
   FileText,
-  Users,
-  BookOpen,
-  Quote,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import type { ResearchPaper, Department } from "@/types";
 
-interface Props {
+export function ResearchCard({
+  paper,
+  department,
+}: {
   paper: ResearchPaper;
   department?: Department;
-}
-
-export function ResearchCard({ paper, department }: Props) {
-  const [expanded, setExpanded] = useState(false);
+}) {
+  const [open, setOpen] = useState(false);
   const authors = Array.isArray(paper.authors) ? paper.authors : [];
 
   return (
-    <div className="card-base p-6 hover:shadow-panel transition-shadow">
-      <div className="flex items-start justify-between gap-4">
+    <div className="card card-hover p-6">
+      <div className="flex items-start justify-between gap-6">
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-3">
-            <span className="text-xs font-medium bg-purple-50 text-purple-700 border border-purple-100 px-2.5 py-0.5 rounded-full">
-              {paper.category}
-            </span>
+            <span className="badge badge-idle">{paper.category}</span>
             {department && (
-              <span className="text-xs text-brand-muted bg-brand-bg border border-brand-border px-2 py-0.5 rounded">
+              <span className="font-mono text-xs text-ink-5">
                 {department.code}
               </span>
             )}
-            <span className="text-xs text-brand-muted font-mono">
-              {paper.year}
-            </span>
+            <span className="font-mono text-xs text-ink-5">{paper.year}</span>
             {paper.citations > 0 && (
-              <span className="flex items-center gap-1 text-xs text-brand-muted">
-                <Quote className="w-3 h-3" /> {paper.citations} citations
+              <span className="text-xs text-ink-5">
+                {paper.citations} citations
               </span>
             )}
           </div>
 
-          <h3 className="font-semibold text-brand-black text-base leading-snug mb-2">
+          <h3 className="text-base font-medium text-ink leading-snug mb-2">
             {paper.title}
           </h3>
 
-          <div className="flex items-center gap-1.5 text-sm text-brand-muted mb-2">
-            <Users className="w-3.5 h-3.5 shrink-0" />
-            <span>{authors.map(String).join(", ")}</span>
-          </div>
+          <p className="text-sm text-ink-4 mb-1">
+            {authors.map(String).join(", ")}
+          </p>
 
-          <div className="flex items-center gap-1.5 text-sm text-brand-muted">
-            <BookOpen className="w-3.5 h-3.5 shrink-0" />
-            <span className="italic">{paper.journal}</span>
-          </div>
+          <p className="text-sm text-ink-5 italic">{paper.journal}</p>
 
           {paper.abstract && (
             <div className="mt-3">
               <p
-                className={`text-sm text-brand-muted leading-relaxed ${!expanded ? "line-clamp-2" : ""}`}
+                className={`text-sm text-ink-4 leading-relaxed ${!open ? "clamp-2" : ""}`}
               >
                 {paper.abstract}
               </p>
               <button
                 type="button"
-                onClick={() => setExpanded(!expanded)}
-                className="flex items-center gap-1 text-xs text-brand-saffron mt-1 hover:underline"
+                onClick={() => setOpen(!open)}
+                className="flex items-center gap-1 text-xs text-ink-2 mt-1.5 hover:text-ink transition-colors"
               >
-                {expanded ? (
+                {open ? (
                   <>
-                    <ChevronUp className="w-3 h-3" /> Show less
+                    <ChevronUp className="w-3 h-3" /> Less
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="w-3 h-3" /> Read more
+                    <ChevronDown className="w-3 h-3" /> Read abstract
                   </>
                 )}
               </button>
@@ -91,14 +80,9 @@ export function ResearchCard({ paper, department }: Props) {
               href={`https://doi.org/${paper.doi}`}
               target="_blank"
               rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs text-ink-2 hover:text-ink transition-colors"
             >
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5 h-8 text-xs"
-              >
-                <ExternalLink className="w-3 h-3" /> DOI
-              </Button>
+              <ExternalLink className="w-3 h-3" /> DOI
             </a>
           )}
           {paper.pdf_url && (
@@ -106,14 +90,9 @@ export function ResearchCard({ paper, department }: Props) {
               href={paper.pdf_url}
               target="_blank"
               rel="noopener noreferrer"
+              className="flex items-center gap-1.5 text-xs text-ink-2 hover:text-ink transition-colors"
             >
-              <Button
-                variant="outline"
-                size="sm"
-                className="gap-1.5 h-8 text-xs"
-              >
-                <FileText className="w-3 h-3" /> PDF
-              </Button>
+              <FileText className="w-3 h-3" /> PDF
             </a>
           )}
         </div>

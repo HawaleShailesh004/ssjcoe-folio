@@ -112,12 +112,15 @@ export interface Event {
   updated_at: string;
 }
 
-// ─── Sports Achievement ───────────────────────────────────────────────────────
-export interface SportsAchievement {
+// ─── Achievement ──────────────────────────────────────────────────────────────
+export type AchievementType = "sports" | "technical" | "cultural" | "academic";
+
+export interface Achievement {
   id: string;
   dept_id: string;
   title: string;
-  sport: string;
+  achievement_type: AchievementType;
+  sport?: string;
   student_name: string;
   achievement_level: AchievementLevel;
   award: string;

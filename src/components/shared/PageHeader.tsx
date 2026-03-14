@@ -1,4 +1,3 @@
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
@@ -12,7 +11,7 @@ interface PageHeaderProps {
   description?: string;
   breadcrumbs?: Crumb[];
   action?: React.ReactNode;
-  className?: string;
+  count?: number;
 }
 
 export function PageHeader({
@@ -20,39 +19,48 @@ export function PageHeader({
   description,
   breadcrumbs,
   action,
-  className,
+  count,
 }: PageHeaderProps) {
   return (
-    <div className={cn("mb-8", className)}>
-      {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="flex items-center gap-1.5 text-sm text-brand-muted mb-3">
-          {breadcrumbs.map((crumb, i) => (
+    <div className="mb-12">
+      {breadcrumbs && (
+        <nav className="flex items-center gap-1.5 mb-6">
+          {breadcrumbs.map((c, i) => (
             <span key={i} className="flex items-center gap-1.5">
-              {i > 0 && <ChevronRight className="w-3.5 h-3.5" />}
-              {crumb.href ? (
+              {i > 0 && <ChevronRight className="w-3 h-3 text-ink-6" />}
+              {c.href ? (
                 <Link
-                  href={crumb.href}
-                  className="hover:text-brand-black transition-colors"
+                  href={c.href}
+                  className="text-xs text-ink-4 hover:text-ink transition-colors"
                 >
-                  {crumb.label}
+                  {c.label}
                 </Link>
               ) : (
-                <span className="text-brand-black font-medium">
-                  {crumb.label}
-                </span>
+                <span className="text-xs text-ink-3">{c.label}</span>
               )}
             </span>
           ))}
         </nav>
       )}
-      <div className="flex items-start justify-between gap-4">
+
+      <div className="flex items-end justify-between gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-brand-black">{title}</h1>
+          <span className="accent-line" />
+          <h1 className="text-4xl text-balance">
+            {title}
+            {count !== undefined && (
+              <span className="font-mono text-2xl text-ink-4 ml-3 font-normal">
+                {count}
+              </span>
+            )}
+          </h1>
           {description && (
-            <p className="text-brand-muted mt-1.5 max-w-2xl">{description}</p>
+            <p className="text-base text-ink-4 mt-3 max-w-prose">
+              {description}
+            </p>
           )}
         </div>
-        {action && <div className="flex-shrink-0">{action}</div>}
+        {action && <div className="shrink-0 pb-1">{action}</div>}
       </div>
     </div>
   );

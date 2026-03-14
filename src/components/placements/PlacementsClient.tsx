@@ -3,22 +3,12 @@
 import { useState, useMemo } from "react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
-import { StatCard } from "@/components/shared/StatCard";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { PlacementCard } from "@/components/placements/PlacementCard";
 import { PlacementTrendChart } from "@/components/placements/PlacementTrendChart";
 import { PlacementDetailModal } from "@/components/placements/PlacementDetailModal";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { LayoutGrid, List, GraduationCap, TrendingUp, Building2, Award } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { LayoutGrid, List } from "lucide-react";
 import type { Placement, Department } from "@/types";
-import { cn } from "@/lib/utils";
 
 interface Props {
   initialPlacements: Placement[];
@@ -39,33 +29,33 @@ export function PlacementsClient({
   departments,
 }: Props) {
   const [search, setSearch] = useState("");
-  const [year, setYear] = useState<string>("all");
-  const [deptId, setDeptId] = useState<string>("all");
-  const [minPkg, setMinPkg] = useState<string>("0");
-  const [view, setView] = useState<"grid" | "list">("grid");
+  const [year, setYear] = useState("all");
+  const [deptId, setDeptId] = useState("all");
+  const [minPkg, setMinPkg] = useState("0");
+  const [view, setView] = useState<"grid" | "list">("list");
   const [selected, setSelected] = useState<Placement | null>(null);
 
-  const filtered = useMemo(() => {
-    return initialPlacements.filter((p) => {
-      const pkg = Number(p.package_lpa) || 0;
-      const matchSearch =
-        !search ||
-        p.student_name.toLowerCase().includes(search.toLowerCase()) ||
-        p.company.toLowerCase().includes(search.toLowerCase()) ||
-        p.role.toLowerCase().includes(search.toLowerCase());
-
-      const matchYear = year === "all" || Number(p.year) === Number(year);
-      const matchDept = deptId === "all" || p.dept_id === deptId;
-      const matchPkg = pkg >= Number(minPkg);
-
-      return matchSearch && matchYear && matchDept && matchPkg;
-    });
-  }, [initialPlacements, search, year, deptId, minPkg]);
+  const filtered = useMemo(
+    () =>
+      initialPlacements.filter((p) => {
+        const q = search.toLowerCase();
+        return (
+          (!search ||
+            p.student_name.toLowerCase().includes(q) ||
+            p.company.toLowerCase().includes(q) ||
+            p.role.toLowerCase().includes(q)) &&
+          (year === "all" || Number(p.year) === Number(year)) &&
+          (deptId === "all" || p.dept_id === deptId) &&
+          Number(p.package_lpa) >= Number(minPkg)
+        );
+      }),
+    [initialPlacements, search, year, deptId, minPkg]
+  );
 
   const hasFilters =
     search !== "" || year !== "all" || deptId !== "all" || minPkg !== "0";
 
-  const clearFilters = () => {
+  const clear = () => {
     setSearch("");
     setYear("all");
     setDeptId("all");
@@ -73,137 +63,110 @@ export function PlacementsClient({
   };
 
   return (
-    <div className="container-main section-pad">
+    <div className="container section">
       <PageHeader
         title="Placements"
-        description="Verified placement records from SSJCOE across all departments."
+        description="Verified placement records across all departments."
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Placements" }]}
+        count={initialPlacements.length}
       />
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatCard
-          label="Total Placed"
-          value={initialPlacements.length}
-          unit="students"
-          icon={<GraduationCap className="w-5 h-5" />}
-        />
-        <StatCard
-          label="Avg Package"
-          value={stats.avg}
-          unit="LPA"
-          icon={<TrendingUp className="w-5 h-5" />}
-        />
-        <StatCard
-          label="Highest Package"
-          value={stats.highest}
-          unit="LPA"
-          icon={<Award className="w-5 h-5" />}
-        />
-        <StatCard
-          label="Companies"
-          value={stats.companies}
-          unit="unique"
-          icon={<Building2 className="w-5 h-5" />}
-        />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-ink-7 border border-ink-7 rounded-lg overflow-hidden mb-12">
+        {[
+          { label: "Total placed", value: initialPlacements.length },
+          { label: "Avg. package", value: stats.avg, unit: "LPA" },
+          { label: "Highest package", value: stats.highest, unit: "LPA" },
+          { label: "Companies", value: stats.companies },
+        ].map((s) => (
+          <div key={s.label} className="bg-white p-6">
+            <p className="label mb-3">{s.label}</p>
+            <p className="num-display text-4xl">
+              {s.value}
+              {s.unit && (
+                <span className="text-base font-sans font-normal text-ink-4 ml-1">
+                  {s.unit}
+                </span>
+              )}
+            </p>
+          </div>
+        ))}
       </div>
 
       {stats.yearlyTrend.length > 1 && (
-        <div className="card-base p-6 mb-8">
-          <h3 className="font-semibold text-brand-black mb-4">
-            Placement trend
-          </h3>
+        <div className="card p-6 mb-10">
+          <p className="label mb-6">Placement trend</p>
           <PlacementTrendChart data={stats.yearlyTrend} />
         </div>
       )}
 
-      <div className="card-base p-4 mb-6">
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <FilterBar
           search={search}
           onSearchChange={setSearch}
-          searchPlaceholder="Search student, company, role..."
-          hasActiveFilters={hasFilters}
-          onClear={clearFilters}
-          filters={
-            <div className="flex flex-wrap gap-2">
-              <Select value={year} onValueChange={setYear}>
-                <SelectTrigger className="w-32 h-9 text-sm">
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All years</SelectItem>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={String(y)}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          placeholder="Search student, company, role..."
+          hasFilters={hasFilters}
+          onClear={clear}
+          resultCount={filtered.length}
+          resultLabel="placements"
+        >
+          <select
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+          >
+            <option value="all">All years</option>
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
 
-              <Select value={deptId} onValueChange={setDeptId}>
-                <SelectTrigger className="w-40 h-9 text-sm">
-                  <SelectValue placeholder="Department" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All departments</SelectItem>
-                  {departments.map((d) => (
-                    <SelectItem key={d.id} value={d.id}>
-                      {d.code}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <select
+            value={deptId}
+            onChange={(e) => setDeptId(e.target.value)}
+            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+          >
+            <option value="all">All departments</option>
+            {departments.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.code}
+              </option>
+            ))}
+          </select>
 
-              <Select value={minPkg} onValueChange={setMinPkg}>
-                <SelectTrigger className="w-40 h-9 text-sm">
-                  <SelectValue placeholder="Min package" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="0">Any package</SelectItem>
-                  <SelectItem value="3">3+ LPA</SelectItem>
-                  <SelectItem value="5">5+ LPA</SelectItem>
-                  <SelectItem value="8">8+ LPA</SelectItem>
-                  <SelectItem value="12">12+ LPA</SelectItem>
-                  <SelectItem value="20">20+ LPA</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          }
-        />
+          <select
+            value={minPkg}
+            onChange={(e) => setMinPkg(e.target.value)}
+            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+          >
+            <option value="0">Any package</option>
+            <option value="3">3+ LPA</option>
+            <option value="5">5+ LPA</option>
+            <option value="8">8+ LPA</option>
+            <option value="12">12+ LPA</option>
+          </select>
+        </FilterBar>
 
-        <div className="flex items-center justify-between mt-3 pt-3 border-t border-brand-border">
-          <p className="text-sm text-brand-muted">
-            <span className="font-semibold text-brand-black font-mono">
-              {filtered.length}
-            </span>{" "}
-            {filtered.length === 1 ? "result" : "results"}
-            {hasFilters && " matching filters"}
-          </p>
-          <div className="flex items-center gap-1 bg-brand-bg rounded-lg p-1">
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setView("grid")}
-              className={cn(
-                "h-7 w-7 p-0",
-                view === "grid" && "bg-white shadow-sm text-brand-black"
-              )}
-              aria-label="Grid view"
+        <div className="flex items-center border border-ink-7 rounded overflow-hidden self-start">
+          {(["list", "grid"] as const).map((v) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => setView(v)}
+              className={`px-3 py-1.5 text-xs font-medium transition-colors ${
+                view === v
+                  ? "bg-ink text-white"
+                  : "bg-white text-ink-4 hover:text-ink"
+              }`}
             >
-              <LayoutGrid className="w-3.5 h-3.5" />
-            </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => setView("list")}
-              className={cn(
-                "h-7 w-7 p-0",
-                view === "list" && "bg-white shadow-sm text-brand-black"
+              {v === "list" ? (
+                <List className="w-3.5 h-3.5" />
+              ) : (
+                <LayoutGrid className="w-3.5 h-3.5" />
               )}
-              aria-label="List view"
-            >
-              <List className="w-3.5 h-3.5" />
-            </Button>
-          </div>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -212,30 +175,63 @@ export function PlacementsClient({
           title="No placements found"
           description={
             hasFilters
-              ? "No placements match your current filters. Try adjusting them."
+              ? "Try adjusting your filters."
               : "No approved placements yet."
           }
           action={
             hasFilters ? (
-              <Button variant="outline" onClick={clearFilters}>
+              <button
+                type="button"
+                onClick={clear}
+                className="text-sm text-ink-2 hover:text-ink hover:underline"
+              >
                 Clear filters
-              </Button>
+              </button>
             ) : undefined
           }
         />
+      ) : view === "list" ? (
+        <div className="card overflow-hidden">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Student</th>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Dept</th>
+                <th>Year</th>
+                <th className="text-right">Package</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((p) => (
+                <tr
+                  key={p.id}
+                  onClick={() => setSelected(p)}
+                  className="cursor-pointer"
+                >
+                  <td className="font-medium text-ink">{p.student_name}</td>
+                  <td className="text-ink-2 font-medium">{p.company}</td>
+                  <td className="text-ink-4">{p.role}</td>
+                  <td className="text-ink-5 font-mono text-xs">
+                    {departments.find((d) => d.id === p.dept_id)?.code ?? "—"}
+                  </td>
+                  <td className="text-ink-4 font-mono">{p.year}</td>
+                  <td className="text-right font-mono font-semibold text-ink">
+                    ₹{p.package_lpa} LPA
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
-        <div
-          className={cn(
-            view === "grid"
-              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-              : "flex flex-col gap-3"
-          )}
-        >
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {filtered.map((p) => (
             <PlacementCard
               key={p.id}
               placement={p}
-              view={view}
+              view="grid"
               department={departments.find((d) => d.id === p.dept_id)}
               onClick={() => setSelected(p)}
             />

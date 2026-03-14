@@ -5,15 +5,6 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ResearchCard } from "@/components/research/ResearchCard";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { FlaskConical } from "lucide-react";
 import type { ResearchPaper, Department } from "@/types";
 
 interface Props {
@@ -45,8 +36,7 @@ export function ResearchClient({
         ) ||
         p.journal.toLowerCase().includes(search.toLowerCase());
 
-      const matchYear =
-        year === "all" || Number(p.year) === Number(year);
+      const matchYear = year === "all" || Number(p.year) === Number(year);
       const matchCategory = category === "all" || p.category === category;
       const matchDept = deptId === "all" || p.dept_id === deptId;
 
@@ -60,7 +50,7 @@ export function ResearchClient({
     category !== "all" ||
     deptId !== "all";
 
-  const clearFilters = () => {
+  const clear = () => {
     setSearch("");
     setYear("all");
     setCategory("all");
@@ -68,105 +58,78 @@ export function ResearchClient({
   };
 
   return (
-    <div className="container-main section-pad">
+    <div className="container section">
       <PageHeader
         title="Research Papers"
         description={`${initialPapers.length} published papers from SSJCOE faculty and students.`}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Research" }]}
+        count={initialPapers.length}
       />
 
-      <div className="flex flex-wrap gap-4 mb-8">
-        {[
-          { label: "Total Papers", value: initialPapers.length },
-          { label: "Categories", value: categories.length },
-          { label: "Departments", value: departments.length },
-        ].map((s) => (
-          <div
-            key={s.label}
-            className="card-base px-5 py-3 flex items-center gap-3"
-          >
-            <span className="font-mono text-xl font-bold text-brand-black">
-              {s.value}
-            </span>
-            <span className="text-sm text-brand-muted">{s.label}</span>
-          </div>
-        ))}
-      </div>
-
-      <div className="card-base p-4 mb-6">
+      <div className="card p-4 mb-6">
         <FilterBar
           search={search}
           onSearchChange={setSearch}
-          searchPlaceholder="Search title, author, journal..."
-          hasActiveFilters={hasFilters}
-          onClear={clearFilters}
-          filters={
-            <div className="flex flex-wrap gap-2">
-              <Select value={year} onValueChange={setYear}>
-                <SelectTrigger className="w-32 h-9 text-sm">
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All years</SelectItem>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={String(y)}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          placeholder="Search title, author, journal..."
+          hasFilters={hasFilters}
+          onClear={clear}
+          resultCount={filtered.length}
+          resultLabel={filtered.length === 1 ? "paper" : "papers"}
+        >
+          <select
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+          >
+            <option value="all">All years</option>
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
 
-              <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="w-40 h-9 text-sm">
-                  <SelectValue placeholder="Category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All categories</SelectItem>
-                  {categories.map((c) => (
-                    <SelectItem key={c} value={c}>
-                      {c}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+          >
+            <option value="all">All categories</option>
+            {categories.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
 
-              <Select value={deptId} onValueChange={setDeptId}>
-                <SelectTrigger className="w-40 h-9 text-sm">
-                  <SelectValue placeholder="Department" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All departments</SelectItem>
-                  {departments.map((d) => (
-                    <SelectItem key={d.id} value={d.id}>
-                      {d.code}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          }
-        />
-        <div className="mt-3 pt-3 border-t border-brand-border">
-          <p className="text-sm text-brand-muted">
-            <span className="font-semibold text-brand-black font-mono">
-              {filtered.length}
-            </span>{" "}
-            {filtered.length === 1 ? "paper" : "papers"}
-            {hasFilters && " matching filters"}
-          </p>
-        </div>
+          <select
+            value={deptId}
+            onChange={(e) => setDeptId(e.target.value)}
+            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+          >
+            <option value="all">All departments</option>
+            {departments.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.code}
+              </option>
+            ))}
+          </select>
+        </FilterBar>
       </div>
 
       {filtered.length === 0 ? (
         <EmptyState
           title="No papers found"
           description="Try adjusting your filters."
-          icon={<FlaskConical className="w-6 h-6" />}
           action={
             hasFilters ? (
-              <Button variant="outline" onClick={clearFilters}>
+              <button
+                type="button"
+                onClick={clear}
+                className="text-sm text-ink-2 hover:text-ink hover:underline"
+              >
                 Clear filters
-              </Button>
+              </button>
             ) : undefined
           }
         />

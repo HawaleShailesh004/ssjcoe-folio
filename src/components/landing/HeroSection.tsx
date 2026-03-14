@@ -1,155 +1,121 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 
-function AnimatedCounter({
-  target,
-  duration = 1500,
-  suffix = "",
+function Counter({
+  to,
+  duration = 1200,
 }: {
-  target: number;
+  to: number;
   duration?: number;
-  suffix?: string;
 }) {
-  const [count, setCount] = useState(0);
+  const [val, setVal] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
+  const fired = useRef(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const start = performance.now();
-          const animate = (now: number) => {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            const ease = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.floor(ease * target));
-            if (progress < 1) requestAnimationFrame(animate);
-            else setCount(target);
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting && !fired.current) {
+          fired.current = true;
+          const t0 = performance.now();
+          const tick = (now: number) => {
+            const p = Math.min((now - t0) / duration, 1);
+            setVal(Math.round((1 - Math.pow(1 - p, 3)) * to));
+            if (p < 1) requestAnimationFrame(tick);
           };
-          requestAnimationFrame(animate);
+          requestAnimationFrame(tick);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.4 }
     );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [to, duration]);
 
-    if (ref.current) observer.observe(ref.current);
-    return () => observer.disconnect();
-  }, [target, duration]);
-
-  return (
-    <span ref={ref}>
-      {count}
-      {suffix}
-    </span>
-  );
+  return <span ref={ref}>{val}</span>;
 }
 
-interface HeroProps {
+export function HeroSection({
+  stats,
+}: {
   stats: {
     totalPlacements: number;
     avgPackage: string;
-    highestPackage: string;
     researchPapers: number;
+    patents: number;
   };
-}
-
-export function HeroSection({ stats }: HeroProps) {
+}) {
   return (
-    <section className="relative bg-brand-black overflow-hidden">
-      {/* Background pattern */}
-      <div
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, white 1px, transparent 0)`,
-          backgroundSize: "32px 32px",
-        }}
-      />
+    <section className="bg-ink text-white">
+      <div className="container">
+        <div className="py-28 md:py-36 max-w-3xl">
+          <p className="label text-ink-5 mb-6 tracking-widest">
+            SSJCOE · Dombivli · Est. 1983
+          </p>
 
-      {/* Saffron glow */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-brand-saffron/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-
-      <div className="container-main section-pad relative z-10">
-        <div className="max-w-4xl">
-          {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-8">
-            <div className="w-1.5 h-1.5 rounded-full bg-brand-saffron animate-pulse" />
-            <span className="text-xs font-medium text-white/70 tracking-wide">
-              SSJCOE · Dombivli
-            </span>
-          </div>
-
-          {/* Headline */}
-          <h1 className="text-5xl sm:text-6xl lg:text-7xl font-display font-bold text-white leading-[1.05] mb-6">
+          <h1 className="font-display text-6xl md:text-7xl text-white leading-[1.0] mb-8 text-balance">
             A record of
             <br />
-            <span className="text-brand-saffron">excellence.</span>
+            <em className="not-italic text-white">excellence.</em>
           </h1>
 
-          <p className="text-lg text-white/50 max-w-xl mb-10 leading-relaxed">
-            Every placement secured, every paper published, every patent filed —
-            tracked, verified, and showcased. This is what SSJCOE produces.
+          <p className="text-base text-ink-5 max-w-lg leading-relaxed mb-10">
+            Every placement secured, paper published, and patent filed —
+            tracked, verified, and made public. This is what SSJCOE produces.
           </p>
 
           <div className="flex flex-wrap gap-3">
-            <Link href="/placements">
-              <Button
-                size="lg"
-                className="bg-brand-saffron hover:bg-brand-saffron/90 text-white font-semibold gap-2 h-12 px-6"
-              >
-                View Placements
-                <ArrowRight className="w-4 h-4" />
-              </Button>
+            <Link
+              href="/placements"
+              className="inline-flex items-center h-10 px-5 bg-white text-ink text-sm font-medium rounded hover:bg-ink-8 transition-colors"
+            >
+              View placements
             </Link>
-            <Link href="/departments">
-              <Button
-                size="lg"
-                variant="outline"
-                className="border-white/20 text-white hover:bg-white/10 h-12 px-6 bg-transparent"
-              >
-                Explore Departments
-              </Button>
+            <Link
+              href="/departments"
+              className="inline-flex items-center h-10 px-5 border border-ink-2 text-ink-5 text-sm font-medium rounded hover:border-ink-4 hover:text-white transition-colors"
+            >
+              Explore departments
             </Link>
           </div>
         </div>
 
-        {/* Live counters */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-16 pt-16 border-t border-white/10">
+        <div className="border-t border-ink-2 grid grid-cols-2 md:grid-cols-4">
           {[
             {
-              label: "Students Placed",
+              label: "Students placed",
               value: stats.totalPlacements,
               suffix: "+",
             },
             {
-              label: "Avg Package",
+              label: "Avg. package",
               value: parseFloat(stats.avgPackage),
               suffix: " LPA",
             },
             {
-              label: "Research Papers",
+              label: "Research papers",
               value: stats.researchPapers,
               suffix: "+",
             },
             {
-              label: "Highest Package",
-              value: parseFloat(stats.highestPackage),
-              suffix: " LPA",
+              label: "Patents filed",
+              value: stats.patents,
+              suffix: "+",
             },
-          ].map((item) => (
-            <div key={item.label} className="text-center lg:text-left">
-              <div className="text-3xl sm:text-4xl font-mono font-bold text-white mb-1">
-                <AnimatedCounter
-                  target={item.value}
-                  suffix={item.suffix}
-                />
-              </div>
-              <div className="text-sm text-white/40">{item.label}</div>
+          ].map((s, i) => (
+            <div
+              key={s.label}
+              className={`py-8 px-6 ${i < 3 ? "md:border-r border-ink-2" : ""} ${i >= 2 ? "border-t md:border-t-0 border-ink-2" : ""}`}
+            >
+              <p className="label text-ink-5 mb-2">{s.label}</p>
+              <p className="num-display text-4xl text-white">
+                <Counter to={s.value} />
+                {s.suffix}
+              </p>
             </div>
           ))}
         </div>

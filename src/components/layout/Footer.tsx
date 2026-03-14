@@ -1,89 +1,77 @@
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
 
-const QUICK_LINKS = [
+const LINKS = [
   { label: "Placements", href: "/placements" },
   { label: "Research", href: "/research" },
   { label: "Patents", href: "/patents" },
   { label: "Events", href: "/events" },
-  { label: "Sports", href: "/sports" },
+  { label: "Achievements", href: "/achievements" },
   { label: "Faculty", href: "/faculty" },
+  { label: "Departments", href: "/departments" },
 ];
 
 export function Footer() {
   return (
-    <footer className="bg-brand-black text-white mt-24">
-      <div className="container-main section-pad">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-          {/* Brand */}
+    <footer className="border-t border-ink-7 bg-white mt-32">
+      <div className="container py-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-brand-saffron/20 flex items-center justify-center">
-                <span className="text-brand-saffron font-mono font-bold text-sm">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2.5 mb-4"
+            >
+              <span className="w-5 h-5 rounded-sm bg-ink flex items-center justify-center">
+                <span className="font-mono text-white text-[9px] font-semibold">
                   JF
                 </span>
-              </div>
-              <span className="font-display font-bold text-white text-lg">
-                Jondhale <span className="text-brand-saffron">Folio</span>
               </span>
-            </div>
-            <p className="text-sm text-white/50 leading-relaxed mb-4">
+              <span className="font-display text-base text-ink">
+                Jondhale Folio
+              </span>
+            </Link>
+            <p className="text-sm text-ink-4 leading-relaxed max-w-xs">
               A record of excellence. A proof of potential.
             </p>
-            <p className="text-xs text-white/30">
-              A credibility showcase platform for SSJCOE. Not the official
-              college website.
+            <p className="text-xs text-ink-5 mt-4">
+              Not the official SSJCOE website.
             </p>
           </div>
 
-          {/* Quick Links */}
           <div>
-            <h4 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-4">
-              Explore
-            </h4>
-            <div className="flex flex-col gap-2.5">
-              {QUICK_LINKS.map((link) => (
+            <p className="label mb-4">Explore</p>
+            <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+              {LINKS.map((l) => (
                 <Link
-                  key={link.href}
-                  href={link.href}
-                  className="text-sm text-white/50 hover:text-white transition-colors"
+                  key={l.href}
+                  href={l.href}
+                  className="text-sm text-ink-4 hover:text-ink transition-colors"
                 >
-                  {link.label}
+                  {l.label}
                 </Link>
               ))}
             </div>
           </div>
 
-          {/* Contact */}
           <div>
-            <h4 className="text-sm font-semibold text-white/70 uppercase tracking-wider mb-4">
-              Contact
-            </h4>
-            <div className="flex flex-col gap-3">
-              <div className="flex items-start gap-2.5 text-sm text-white/50">
-                <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-brand-saffron/70" />
-                <span>SSJCOE, Dombivli, Maharashtra, India</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-white/50">
-                <Mail className="w-4 h-4 flex-shrink-0 text-brand-saffron/70" />
-                <span>placement@ssjcoe.edu.in</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-white/50">
-                <Phone className="w-4 h-4 flex-shrink-0 text-brand-saffron/70" />
-                <span>+91 XXXXX XXXXX</span>
-              </div>
+            <p className="label mb-4">Contact</p>
+            <div className="space-y-2 text-sm text-ink-4">
+              <p>SSJCOE, Dombivli</p>
+              <p>Maharashtra, India</p>
+              <a
+                href="mailto:placement@ssjcoe.edu.in"
+                className="block text-ink-2 hover:text-ink transition-colors mt-3"
+              >
+                placement@ssjcoe.edu.in
+              </a>
             </div>
           </div>
         </div>
 
-        {/* Bottom bar */}
-        <div className="mt-12 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-white/30">
-            © {new Date().getFullYear()} Jondhale Folio · SSJCOE
-          </p>
-          <p className="text-xs text-white/30">
-            Data verified by SSJCOE · Not the official website
-          </p>
+        <div className="divider mt-10 mb-6" />
+
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-ink-5">
+          <span>© {new Date().getFullYear()} Jondhale Folio · SSJCOE</span>
+          <span>Data verified by college · Not the official website</span>
         </div>
       </div>
     </footer>

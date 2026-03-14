@@ -5,15 +5,8 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { FacultyCard } from "@/components/faculty/FacultyCard";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Users } from "lucide-react";
 import type { Faculty, Department } from "@/types";
+import { cn } from "@/lib/utils";
 
 interface Props {
   initialFaculty: Faculty[];
@@ -61,25 +54,31 @@ export function FacultyClient({
     [filtered]
   );
 
-  const clearFilters = () => {
+  const clear = () => {
     setSearch("");
     setDeptId("all");
     setDesig("all");
   };
 
   return (
-    <div className="container-main section-pad">
+    <div className="container section">
       <PageHeader
         title="Faculty"
         description={`${initialFaculty.length} faculty members across all departments.`}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Faculty" }]}
+        count={initialFaculty.length}
       />
 
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-2 mb-6">
         <button
           type="button"
           onClick={() => setDeptId("all")}
-          className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${deptId === "all" ? "bg-brand-black text-white border-brand-black" : "bg-white text-brand-muted border-brand-border hover:border-brand-slate"}`}
+          className={cn(
+            "px-4 py-1.5 rounded-full text-sm font-medium border transition-all",
+            deptId === "all"
+              ? "bg-ink text-white border-ink"
+              : "bg-white text-ink-4 border-ink-7 hover:border-ink-6"
+          )}
         >
           All · {initialFaculty.length}
         </button>
@@ -91,7 +90,12 @@ export function FacultyClient({
               key={d.id}
               type="button"
               onClick={() => setDeptId(d.id)}
-              className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all ${deptId === d.id ? "bg-brand-black text-white border-brand-black" : "bg-white text-brand-muted border-brand-border hover:border-brand-slate"}`}
+              className={cn(
+                "px-4 py-1.5 rounded-full text-sm font-medium border transition-all",
+                deptId === d.id
+                  ? "bg-ink text-white border-ink"
+                  : "bg-white text-ink-4 border-ink-7 hover:border-ink-6"
+              )}
             >
               {d.code} · {count}
             </button>
@@ -99,36 +103,33 @@ export function FacultyClient({
         })}
       </div>
 
-      <div className="card-base p-4 mb-6">
+      <div className="card p-4 mb-6">
         <FilterBar
           search={search}
           onSearchChange={setSearch}
-          searchPlaceholder="Search by name or specialization..."
-          hasActiveFilters={hasFilters}
-          onClear={clearFilters}
-          filters={
-            <Select value={desig} onValueChange={setDesig}>
-              <SelectTrigger className="w-52 h-9 text-sm">
-                <SelectValue placeholder="Designation" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All designations</SelectItem>
-                {designations.map((d) => (
-                  <SelectItem key={d} value={d}>
-                    {d}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          }
-        />
+          placeholder="Search by name or specialization..."
+          hasFilters={hasFilters}
+          onClear={clear}
+          resultCount={sorted.length}
+          resultLabel={sorted.length === 1 ? "faculty" : "faculty"}
+        >
+          <select
+            value={desig}
+            onChange={(e) => setDesig(e.target.value)}
+            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+          >
+            <option value="all">All designations</option>
+            {designations.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
+          </select>
+        </FilterBar>
       </div>
 
       {sorted.length === 0 ? (
-        <EmptyState
-          title="No faculty found"
-          icon={<Users className="w-6 h-6" />}
-        />
+        <EmptyState title="No faculty found" />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {sorted.map((f) => (

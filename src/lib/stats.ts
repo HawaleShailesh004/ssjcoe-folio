@@ -7,13 +7,13 @@ const DEFAULT_STATS = {
   researchPapers: 0,
   patents: 0,
   events: 0,
-  sportsAchievements: 0,
+  achievementsCount: 0,
 };
 
 export async function getLandingStats() {
   if (!supabase) return DEFAULT_STATS;
 
-  const [placements, research, patents, events, sports] = await Promise.all([
+  const [placements, research, patents, events, achievements] = await Promise.all([
     supabase
       .from("placements")
       .select("id, package_lpa", { count: "exact" })
@@ -31,7 +31,7 @@ export async function getLandingStats() {
       .select("id", { count: "exact" })
       .eq("status", "approved"),
     supabase
-      .from("sports_achievements")
+      .from("achievements")
       .select("id", { count: "exact" })
       .eq("status", "approved"),
   ]);
@@ -52,7 +52,7 @@ export async function getLandingStats() {
     researchPapers: research.count ?? 0,
     patents: patents.count ?? 0,
     events: events.count ?? 0,
-    sportsAchievements: sports.count ?? 0,
+    achievementsCount: achievements.count ?? 0,
   };
 }
 

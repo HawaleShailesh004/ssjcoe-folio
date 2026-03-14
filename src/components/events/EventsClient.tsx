@@ -5,15 +5,6 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { EventCard } from "@/components/events/EventCard";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "lucide-react";
 import type { Event, Department, EventType } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -69,7 +60,7 @@ export function EventsClient({
     deptId !== "all" ||
     year !== "all";
 
-  const clearFilters = () => {
+  const clear = () => {
     setSearch("");
     setType("all");
     setDeptId("all");
@@ -77,14 +68,15 @@ export function EventsClient({
   };
 
   return (
-    <div className="container-main section-pad">
+    <div className="container section">
       <PageHeader
         title="Events"
         description={`${initialEvents.length} events conducted across SSJCOE departments.`}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Events" }]}
+        count={initialEvents.length}
       />
 
-      <div className="flex flex-wrap gap-2 mb-8">
+      <div className="flex flex-wrap gap-2 mb-6">
         {EVENT_TYPES.map((t) => (
           <button
             key={t.value}
@@ -93,8 +85,8 @@ export function EventsClient({
             className={cn(
               "px-4 py-1.5 rounded-full text-sm font-medium border transition-all",
               type === t.value
-                ? "bg-brand-black text-white border-brand-black"
-                : "bg-white text-brand-muted border-brand-border hover:border-brand-slate"
+                ? "bg-ink text-white border-ink"
+                : "bg-white text-ink-4 border-ink-7 hover:border-ink-6"
             )}
           >
             {t.label}
@@ -102,56 +94,57 @@ export function EventsClient({
         ))}
       </div>
 
-      <div className="card-base p-4 mb-6">
+      <div className="card p-4 mb-6">
         <FilterBar
           search={search}
           onSearchChange={setSearch}
-          searchPlaceholder="Search events..."
-          hasActiveFilters={hasFilters}
-          onClear={clearFilters}
-          filters={
-            <div className="flex flex-wrap gap-2">
-              <Select value={year} onValueChange={setYear}>
-                <SelectTrigger className="w-32 h-9 text-sm">
-                  <SelectValue placeholder="Year" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All years</SelectItem>
-                  {years.map((y) => (
-                    <SelectItem key={y} value={String(y)}>
-                      {y}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+          placeholder="Search events..."
+          hasFilters={hasFilters}
+          onClear={clear}
+          resultCount={filtered.length}
+          resultLabel="events"
+        >
+          <select
+            value={year}
+            onChange={(e) => setYear(e.target.value)}
+            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+          >
+            <option value="all">All years</option>
+            {years.map((y) => (
+              <option key={y} value={y}>
+                {y}
+              </option>
+            ))}
+          </select>
 
-              <Select value={deptId} onValueChange={setDeptId}>
-                <SelectTrigger className="w-40 h-9 text-sm">
-                  <SelectValue placeholder="Department" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All departments</SelectItem>
-                  {departments.map((d) => (
-                    <SelectItem key={d.id} value={d.id}>
-                      {d.code}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          }
-        />
+          <select
+            value={deptId}
+            onChange={(e) => setDeptId(e.target.value)}
+            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+          >
+            <option value="all">All departments</option>
+            {departments.map((d) => (
+              <option key={d.id} value={d.id}>
+                {d.code}
+              </option>
+            ))}
+          </select>
+        </FilterBar>
       </div>
 
       {filtered.length === 0 ? (
         <EmptyState
           title="No events found"
-          icon={<Calendar className="w-6 h-6" />}
+          description={hasFilters ? "Try adjusting your filters." : undefined}
           action={
             hasFilters ? (
-              <Button variant="outline" onClick={clearFilters}>
+              <button
+                type="button"
+                onClick={clear}
+                className="text-sm text-ink-2 hover:text-ink hover:underline"
+              >
                 Clear filters
-              </Button>
+              </button>
             ) : undefined
           }
         />

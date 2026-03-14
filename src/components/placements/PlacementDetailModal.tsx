@@ -6,92 +6,66 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { MapPin, Briefcase, Calendar, Building2, Mail } from "lucide-react";
+import { MapPin, Briefcase, Calendar, Mail } from "lucide-react";
 import type { Placement, Department } from "@/types";
-
-interface Props {
-  placement: Placement;
-  department?: Department;
-  onClose: () => void;
-}
 
 export function PlacementDetailModal({
   placement: p,
   department,
   onClose,
-}: Props) {
+}: {
+  placement: Placement;
+  department?: Department;
+  onClose: () => void;
+}) {
   return (
     <Dialog open onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-sm">
         <DialogHeader>
-          <DialogTitle className="text-lg font-bold">
-            Placement Detail
+          <DialogTitle className="font-display text-xl font-normal">
+            {p.student_name}
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-5">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-brand-border flex items-center justify-center text-brand-muted font-bold text-xl overflow-hidden flex-shrink-0">
-              {p.photo_url ? (
-                <img
-                  src={p.photo_url}
-                  alt={p.student_name}
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                p.student_name.charAt(0)
-              )}
-            </div>
-            <div>
-              <h3 className="font-bold text-brand-black text-lg">
-                {p.student_name}
-              </h3>
-              <p className="text-brand-saffron font-semibold">{p.company}</p>
-              {department && (
-                <span className="text-xs text-brand-muted">
-                  {department.name}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <div className="bg-green-50 border border-green-100 rounded-lg p-4 text-center">
-            <p className="text-xs text-green-700 font-medium mb-1">Package</p>
-            <p className="font-mono text-3xl font-bold text-green-800">
-              ₹{p.package_lpa} LPA
-            </p>
+          <div className="p-4 bg-ink-9 rounded-lg text-center">
+            <p className="label mb-1">Package</p>
+            <p className="num-display text-3xl text-ink">₹{p.package_lpa} LPA</p>
           </div>
 
           <div className="space-y-3">
             {[
               { icon: Briefcase, label: "Role", value: p.role },
-              { icon: Building2, label: "Company", value: p.company },
+              { icon: Briefcase, label: "Company", value: p.company },
               { icon: MapPin, label: "Location", value: p.location },
-              {
-                icon: Calendar,
-                label: "Batch",
-                value: p.year?.toString(),
-              },
+              { icon: Calendar, label: "Batch", value: p.year?.toString() },
               { icon: Mail, label: "Email", value: p.email },
             ]
-              .filter((item) => item.value)
-              .map((item) => {
-                const Icon = item.icon;
+              .filter((r) => r.value)
+              .map((row) => {
+                const Icon = row.icon;
                 return (
-                  <div key={item.label} className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-brand-bg flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-4 h-4 text-brand-muted" />
-                    </div>
+                  <div key={row.label} className="flex items-start gap-3">
+                    <Icon className="w-4 h-4 text-ink-5 mt-0.5 shrink-0" />
                     <div>
-                      <p className="text-xs text-brand-muted">{item.label}</p>
-                      <p className="text-sm font-medium text-brand-black">
-                        {item.value}
+                      <p className="text-xs text-ink-4">{row.label}</p>
+                      <p className="text-sm text-ink font-medium">
+                        {row.value}
                       </p>
                     </div>
                   </div>
                 );
               })}
           </div>
+
+          {department && (
+            <div className="pt-3 border-t border-ink-7">
+              <p className="text-xs text-ink-4">Department</p>
+              <p className="text-sm font-medium text-ink mt-0.5">
+                {department.name}
+              </p>
+            </div>
+          )}
         </div>
       </DialogContent>
     </Dialog>

@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  BarChart,
+  Bar,
   LineChart,
   Line,
   XAxis,
@@ -8,55 +10,55 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Bar,
-  BarChart,
-  Legend,
 } from "recharts";
 
-interface TrendData {
-  year: number;
-  count: number;
-  avg: number;
-  highest: number;
-}
+const style = {
+  tick: { fontSize: 11, fill: "#6B6B6B" },
+  grid: "#E8E8E8",
+  bar: "#0A0A0A",
+  line1: "#0A0A0A",
+  line2: "#C8C8C8",
+};
 
-export function PlacementTrendChart({ data }: { data: TrendData[] }) {
+export function PlacementTrendChart({
+  data,
+}: {
+  data: { year: number; count: number; avg: number; highest: number }[];
+}) {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div>
-        <p className="text-xs font-medium text-brand-muted mb-3 uppercase tracking-wider">
-          Students placed per year
-        </p>
-        <ResponsiveContainer width="100%" height={180}>
-          <BarChart data={data} barSize={28}>
+        <p className="label mb-4">Students placed · per year</p>
+        <ResponsiveContainer width="100%" height={160}>
+          <BarChart data={data} barSize={20}>
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="#E5E7EB"
+              stroke={style.grid}
               vertical={false}
             />
             <XAxis
               dataKey="year"
-              tick={{ fontSize: 12, fill: "#6B7280" }}
+              tick={style.tick}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fontSize: 12, fill: "#6B7280" }}
+              tick={style.tick}
               axisLine={false}
               tickLine={false}
             />
             <Tooltip
               contentStyle={{
-                borderRadius: 8,
-                border: "1px solid #E5E7EB",
                 fontSize: 12,
+                borderRadius: 4,
+                border: "1px solid #E8E8E8",
               }}
-              cursor={{ fill: "#F9FAFB" }}
+              cursor={{ fill: "#F4F4F4" }}
             />
             <Bar
               dataKey="count"
-              fill="#FF9500"
-              radius={[4, 4, 0, 0]}
+              fill={style.bar}
+              radius={[2, 2, 0, 0]}
               name="Students"
             />
           </BarChart>
@@ -64,51 +66,48 @@ export function PlacementTrendChart({ data }: { data: TrendData[] }) {
       </div>
 
       <div>
-        <p className="text-xs font-medium text-brand-muted mb-3 uppercase tracking-wider">
-          Package trend (LPA)
-        </p>
-        <ResponsiveContainer width="100%" height={180}>
+        <p className="label mb-4">Package trend · LPA</p>
+        <ResponsiveContainer width="100%" height={160}>
           <LineChart data={data}>
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="#E5E7EB"
+              stroke={style.grid}
               vertical={false}
             />
             <XAxis
               dataKey="year"
-              tick={{ fontSize: 12, fill: "#6B7280" }}
+              tick={style.tick}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
-              tick={{ fontSize: 12, fill: "#6B7280" }}
+              tick={style.tick}
               axisLine={false}
               tickLine={false}
             />
             <Tooltip
               contentStyle={{
-                borderRadius: 8,
-                border: "1px solid #E5E7EB",
                 fontSize: 12,
+                borderRadius: 4,
+                border: "1px solid #E8E8E8",
               }}
             />
-            <Legend iconType="circle" wrapperStyle={{ fontSize: 12 }} />
             <Line
               type="monotone"
               dataKey="avg"
-              stroke="#FF9500"
-              strokeWidth={2}
-              dot={{ r: 4 }}
-              name="Avg LPA"
+              stroke={style.line1}
+              strokeWidth={1.5}
+              dot={{ r: 3, fill: style.line1 }}
+              name="Avg"
             />
             <Line
               type="monotone"
               dataKey="highest"
-              stroke="#1C1C1E"
-              strokeWidth={2}
-              dot={{ r: 4 }}
-              name="Highest LPA"
-              strokeDasharray="5 5"
+              stroke={style.line2}
+              strokeWidth={1.5}
+              dot={{ r: 3, fill: style.line2 }}
+              strokeDasharray="4 4"
+              name="Highest"
             />
           </LineChart>
         </ResponsiveContainer>

@@ -1,19 +1,20 @@
 import Link from "next/link";
-import { Crown, ArrowRight } from "lucide-react";
+import { Crown } from "lucide-react";
 import type { Faculty, Department } from "@/types";
 
-interface Props {
+export function FacultyCard({
+  faculty: f,
+  department,
+}: {
   faculty: Faculty;
   department?: Department;
-}
-
-export function FacultyCard({ faculty: f, department }: Props) {
+}) {
   const specialization = Array.isArray(f.specialization) ? f.specialization : [];
 
   return (
     <Link href={`/faculty/${f.id}`}>
-      <div className="card-base p-5 hover:shadow-panel hover:border-brand-saffron/20 transition-all group cursor-pointer h-full">
-        <div className="relative w-16 h-16 rounded-full overflow-hidden bg-brand-border mx-auto mb-4">
+      <div className="card card-hover p-5 group h-full">
+        <div className="relative w-12 h-12 rounded-full overflow-hidden bg-ink-8 mb-4">
           {f.photo_url ? (
             <img
               src={f.photo_url}
@@ -21,52 +22,41 @@ export function FacultyCard({ faculty: f, department }: Props) {
               className="w-full h-full object-cover"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-brand-muted font-bold text-xl">
+            <div className="w-full h-full flex items-center justify-center text-ink-4 font-semibold">
               {f.name.charAt(0)}
             </div>
           )}
           {f.is_hod && (
-            <div className="absolute -top-1 -right-1 w-5 h-5 bg-brand-saffron rounded-full flex items-center justify-center">
-              <Crown className="w-3 h-3 text-white" />
+            <div className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-ink rounded-full flex items-center justify-center">
+              <Crown className="w-2.5 h-2.5 text-white" />
             </div>
           )}
         </div>
 
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1.5 mb-0.5">
-            <h3 className="font-semibold text-brand-black text-sm truncate">
-              {f.name}
-            </h3>
-          </div>
-          <p className="text-xs text-brand-muted mb-1">{f.designation}</p>
-          {department && (
-            <span className="inline-block text-xs text-brand-muted bg-brand-bg border border-brand-border px-2 py-0.5 rounded mb-3">
-              {department.code}
-            </span>
-          )}
+        <p className="text-sm font-medium text-ink mb-0.5 truncate">{f.name}</p>
+        <p className="text-xs text-ink-4 mb-1">{f.designation}</p>
 
-          {specialization.length > 0 && (
-            <div className="flex flex-wrap justify-center gap-1 mb-3">
-              {specialization.slice(0, 2).map((s) => (
-                <span
-                  key={s}
-                  className="text-xs bg-brand-bg text-brand-muted px-2 py-0.5 rounded-full border border-brand-border"
-                >
-                  {s}
-                </span>
-              ))}
-              {specialization.length > 2 && (
-                <span className="text-xs text-brand-muted">
-                  +{specialization.length - 2}
-                </span>
-              )}
-            </div>
-          )}
+        {department && (
+          <p className="font-mono text-xs text-ink-2 mb-3">{department.code}</p>
+        )}
 
-          <div className="flex items-center justify-center gap-1 text-xs font-medium text-brand-saffron opacity-0 group-hover:opacity-100 transition-opacity">
-            View profile <ArrowRight className="w-3 h-3" />
+        {specialization.length > 0 && (
+          <div className="flex flex-wrap gap-1">
+            {specialization.slice(0, 2).map((s) => (
+              <span
+                key={s}
+                className="text-xs text-ink-5 bg-ink-9 border border-ink-7 px-2 py-0.5 rounded"
+              >
+                {s}
+              </span>
+            ))}
+            {specialization.length > 2 && (
+              <span className="text-xs text-ink-5">
+                +{specialization.length - 2}
+              </span>
+            )}
           </div>
-        </div>
+        )}
       </div>
     </Link>
   );

@@ -1,105 +1,54 @@
 import Link from "next/link";
-import {
-  GraduationCap,
-  FlaskConical,
-  Award,
-  Calendar,
-  Trophy,
-  ArrowRight,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
-interface StatsSectionProps {
+export function StatsSection({
+  stats,
+}: {
   stats: {
     totalPlacements: number;
     researchPapers: number;
     patents: number;
     events: number;
-    sportsAchievements: number;
+    achievementsCount: number;
   };
-}
+}) {
+  const items = [
+    { label: "Placements", value: stats.totalPlacements, href: "/placements" },
+    { label: "Papers", value: stats.researchPapers, href: "/research" },
+    { label: "Patents", value: stats.patents, href: "/patents" },
+    { label: "Events", value: stats.events, href: "/events" },
+    {
+      label: "Achievements",
+      value: stats.achievementsCount,
+      href: "/achievements",
+    },
+  ];
 
-const STAT_ITEMS = (stats: StatsSectionProps["stats"]) => [
-  {
-    icon: GraduationCap,
-    value: stats.totalPlacements,
-    label: "Students Placed",
-    href: "/placements",
-    color: "text-blue-600",
-    bg: "bg-blue-50",
-  },
-  {
-    icon: FlaskConical,
-    value: stats.researchPapers,
-    label: "Research Papers",
-    href: "/research",
-    color: "text-purple-600",
-    bg: "bg-purple-50",
-  },
-  {
-    icon: Award,
-    value: stats.patents,
-    label: "Patents Filed",
-    href: "/patents",
-    color: "text-brand-saffron",
-    bg: "bg-amber-50",
-  },
-  {
-    icon: Calendar,
-    value: stats.events,
-    label: "Events Conducted",
-    href: "/events",
-    color: "text-green-600",
-    bg: "bg-green-50",
-  },
-  {
-    icon: Trophy,
-    value: stats.sportsAchievements,
-    label: "Sports Achievements",
-    href: "/sports",
-    color: "text-red-600",
-    bg: "bg-red-50",
-  },
-];
-
-export function StatsSection({ stats }: StatsSectionProps) {
   return (
-    <section className="section-pad bg-white border-b border-brand-border">
-      <div className="container-main">
-        <div className="flex items-center justify-between mb-8">
+    <section className="section bg-white border-b border-ink-7">
+      <div className="container">
+        <div className="flex items-end justify-between mb-10">
           <div>
-            <h2 className="text-2xl font-bold text-brand-black">
-              By the numbers
-            </h2>
-            <p className="text-brand-muted mt-1">
-              Verified data across all departments
-            </p>
+            <span className="accent-line" />
+            <h2 className="text-3xl">By the numbers</h2>
           </div>
+          <p className="text-sm text-ink-4 pb-1">All departments · All years</p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {STAT_ITEMS(stats).map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.label}
-                href={item.href}
-                className="card-base p-5 hover:shadow-panel transition-shadow group"
-              >
-                <div
-                  className={`w-10 h-10 rounded-lg ${item.bg} flex items-center justify-center mb-3`}
-                >
-                  <Icon className={`w-5 h-5 ${item.color}`} />
-                </div>
-                <div className="font-mono text-2xl font-bold text-brand-black mb-0.5">
-                  {item.value}+
-                </div>
-                <div className="text-xs text-brand-muted">{item.label}</div>
-                <div className="mt-3 flex items-center gap-1 text-xs font-medium text-brand-saffron opacity-0 group-hover:opacity-100 transition-opacity">
-                  View all <ArrowRight className="w-3 h-3" />
-                </div>
-              </Link>
-            );
-          })}
+        <div className="grid grid-cols-2 md:grid-cols-5 divide-x divide-y md:divide-y-0 divide-ink-7 border border-ink-7 rounded-lg overflow-hidden">
+          {items.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="group p-6 bg-white hover:bg-ink-9 transition-colors"
+            >
+              <p className="num-display text-4xl mb-2">{item.value}+</p>
+              <div className="flex items-center justify-between">
+                <p className="label">{item.label}</p>
+                <ArrowRight className="w-3.5 h-3.5 text-ink-6 group-hover:text-ink group-hover:translate-x-0.5 transition-all" />
+              </div>
+            </Link>
+          ))}
         </div>
       </div>
     </section>

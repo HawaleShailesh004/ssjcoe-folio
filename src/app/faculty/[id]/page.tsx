@@ -51,7 +51,7 @@ export default async function FacultyProfilePage({ params }: Props) {
     : [];
 
   return (
-    <div className="container-main section-pad">
+    <div className="container section">
       <PageHeader
         breadcrumbs={[
           { label: "Home", href: "/" },
@@ -63,8 +63,8 @@ export default async function FacultyProfilePage({ params }: Props) {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-1">
-          <div className="card-base p-6 sticky top-24">
-            <div className="relative w-24 h-24 rounded-full overflow-hidden bg-brand-border mx-auto mb-4">
+          <div className="card p-6 sticky top-24">
+            <div className="relative w-24 h-24 rounded-full overflow-hidden bg-ink-8 mx-auto mb-4">
               {faculty.photo_url ? (
                 <img
                   src={faculty.photo_url}
@@ -72,29 +72,29 @@ export default async function FacultyProfilePage({ params }: Props) {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-brand-muted font-bold text-3xl">
+                <div className="w-full h-full flex items-center justify-center text-ink-4 font-bold text-3xl">
                   {faculty.name.charAt(0)}
                 </div>
               )}
               {faculty.is_hod && (
-                <div className="absolute -top-1 -right-1 w-6 h-6 bg-brand-saffron rounded-full flex items-center justify-center">
+                <div className="absolute -top-1 -right-1 w-6 h-6 bg-ink rounded-full flex items-center justify-center">
                   <Crown className="w-3.5 h-3.5 text-white" />
                 </div>
               )}
             </div>
 
             <div className="text-center mb-5">
-              <h1 className="font-bold text-brand-black text-xl mb-1">
+              <h1 className="font-display font-normal text-ink text-xl mb-1">
                 {faculty.name}
               </h1>
               {faculty.is_hod && (
-                <span className="inline-block text-xs font-medium text-brand-saffron bg-amber-50 border border-amber-100 px-2.5 py-0.5 rounded-full mb-2">
+                <span className="inline-block text-xs font-medium text-ink-2 bg-ink-8 border border-ink-7 px-2.5 py-0.5 rounded-full mb-2">
                   Head of Department
                 </span>
               )}
-              <p className="text-brand-muted text-sm">{faculty.designation}</p>
+              <p className="text-ink-4 text-sm">{faculty.designation}</p>
               {department && (
-                <p className="text-sm font-medium text-brand-black mt-1">
+                <p className="text-sm font-medium text-ink mt-1">
                   {department.name}
                 </p>
               )}
@@ -103,32 +103,30 @@ export default async function FacultyProfilePage({ params }: Props) {
             {faculty.email && (
               <a
                 href={`mailto:${faculty.email}`}
-                className="flex items-center gap-2.5 text-sm text-brand-muted hover:text-brand-black transition-colors mb-5"
+                className="flex items-center gap-2.5 text-sm text-ink-4 hover:text-ink transition-colors mb-5"
               >
-                <Mail className="w-4 h-4 shrink-0 text-brand-saffron" />
+                <Mail className="w-4 h-4 shrink-0 text-ink-2" />
                 <span className="truncate">{faculty.email}</span>
               </a>
             )}
 
             {faculty.education && (
               <div className="mb-5">
-                <div className="flex items-center gap-2 text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
+                <div className="label mb-2 flex items-center gap-2">
                   <GraduationCap className="w-3.5 h-3.5" /> Education
                 </div>
-                <p className="text-sm text-brand-slate">{faculty.education}</p>
+                <p className="text-sm text-ink-3">{faculty.education}</p>
               </div>
             )}
 
             {specialization.length > 0 && (
               <div>
-                <div className="text-xs font-semibold text-brand-muted uppercase tracking-wider mb-2">
-                  Specializations
-                </div>
+                <div className="label mb-2">Specializations</div>
                 <div className="flex flex-wrap gap-1.5">
                   {specialization.map((s) => (
                     <span
                       key={s}
-                      className="text-xs bg-brand-bg text-brand-slate px-2.5 py-1 rounded-full border border-brand-border"
+                      className="text-xs bg-ink-9 text-ink-3 px-2.5 py-1 rounded border border-ink-7"
                     >
                       {s}
                     </span>
@@ -141,21 +139,21 @@ export default async function FacultyProfilePage({ params }: Props) {
 
         <div className="lg:col-span-2 space-y-6">
           {faculty.bio && (
-            <div className="card-base p-6">
-              <h2 className="font-semibold text-brand-black mb-3">About</h2>
-              <p className="text-brand-muted leading-relaxed text-sm">
+            <div className="card p-6">
+              <h2 className="font-semibold text-ink mb-3">About</h2>
+              <p className="text-ink-4 leading-relaxed text-sm">
                 {faculty.bio}
               </p>
             </div>
           )}
 
           {papers.length > 0 && (
-            <div className="card-base p-6">
+            <div className="card p-6">
               <div className="flex items-center gap-2 mb-4">
-                <BookOpen className="w-4 h-4 text-brand-saffron" />
-                <h2 className="font-semibold text-brand-black">
+                <BookOpen className="w-4 h-4 text-ink-2" />
+                <h2 className="font-semibold text-ink">
                   Research Papers
-                  <span className="ml-2 text-sm font-normal text-brand-muted">
+                  <span className="ml-2 text-sm font-normal text-ink-4">
                     ({papers.length})
                   </span>
                 </h2>
@@ -164,20 +162,18 @@ export default async function FacultyProfilePage({ params }: Props) {
                 {papers.map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-start justify-between gap-3 py-3 border-b border-brand-border last:border-0"
+                    className="flex items-start justify-between gap-3 py-3 border-b border-ink-7 last:border-0"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-brand-black leading-snug mb-1">
+                      <p className="text-sm font-medium text-ink leading-snug mb-1">
                         {p.title}
                       </p>
-                      <div className="flex items-center gap-2 text-xs text-brand-muted flex-wrap">
+                      <div className="flex items-center gap-2 text-xs text-ink-4 flex-wrap">
                         <span className="italic">{p.journal}</span>
                         <span>·</span>
                         <span className="font-mono">{p.year}</span>
                         <span>·</span>
-                        <span className="bg-purple-50 text-purple-700 px-1.5 py-0.5 rounded">
-                          {p.category}
-                        </span>
+                        <span className="badge badge-idle">{p.category}</span>
                       </div>
                     </div>
                     {p.doi && (
@@ -185,7 +181,7 @@ export default async function FacultyProfilePage({ params }: Props) {
                         href={`https://doi.org/${p.doi}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-brand-saffron hover:underline shrink-0"
+                        className="text-ink-2 hover:text-ink hover:underline shrink-0"
                         aria-label="Open DOI"
                       >
                         <ExternalLink className="w-4 h-4" />
@@ -198,12 +194,12 @@ export default async function FacultyProfilePage({ params }: Props) {
           )}
 
           {patents.length > 0 && (
-            <div className="card-base p-6">
+            <div className="card p-6">
               <div className="flex items-center gap-2 mb-4">
-                <Award className="w-4 h-4 text-brand-saffron" />
-                <h2 className="font-semibold text-brand-black">
+                <Award className="w-4 h-4 text-ink-2" />
+                <h2 className="font-semibold text-ink">
                   Patents
-                  <span className="ml-2 text-sm font-normal text-brand-muted">
+                  <span className="ml-2 text-sm font-normal text-ink-4">
                     ({patents.length})
                   </span>
                 </h2>
@@ -212,15 +208,21 @@ export default async function FacultyProfilePage({ params }: Props) {
                 {patents.map((p) => (
                   <div
                     key={p.id}
-                    className="flex items-start justify-between gap-3 py-3 border-b border-brand-border last:border-0"
+                    className="flex items-start justify-between gap-3 py-3 border-b border-ink-7 last:border-0"
                   >
                     <div>
-                      <p className="text-sm font-medium text-brand-black mb-1">
+                      <p className="text-sm font-medium text-ink mb-1">
                         {p.title}
                       </p>
-                      <div className="flex items-center gap-2 text-xs text-brand-muted flex-wrap">
+                      <div className="flex items-center gap-2 text-xs text-ink-4 flex-wrap">
                         <span
-                          className={`px-1.5 py-0.5 rounded capitalize border ${p.patent_status === "granted" ? "bg-green-50 text-green-700 border-green-200" : p.patent_status === "published" ? "bg-amber-50 text-amber-700 border-amber-200" : "bg-blue-50 text-blue-700 border-blue-200"}`}
+                          className={
+                            p.patent_status === "granted"
+                              ? "badge badge-ok"
+                              : p.patent_status === "published"
+                                ? "badge badge-warn"
+                                : "badge badge-idle"
+                          }
                         >
                           {p.patent_status}
                         </span>
@@ -239,7 +241,7 @@ export default async function FacultyProfilePage({ params }: Props) {
           )}
 
           {papers.length === 0 && patents.length === 0 && (
-            <div className="card-base p-6 text-center text-brand-muted text-sm">
+            <div className="card p-6 text-center text-ink-4 text-sm">
               No publications linked yet.
             </div>
           )}

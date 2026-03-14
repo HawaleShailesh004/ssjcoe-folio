@@ -9,18 +9,9 @@ import { getResearchPapers } from "@/lib/research";
 import { getDepartments } from "@/lib/stats";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/shared/PageHeader";
-import { StatCard } from "@/components/shared/StatCard";
 import { FacultyCard } from "@/components/faculty/FacultyCard";
 import { ResearchCard } from "@/components/research/ResearchCard";
 import { DepartmentPlacementsGrid } from "@/components/departments/DepartmentPlacementsGrid";
-import {
-  GraduationCap,
-  FlaskConical,
-  Award,
-  Calendar,
-  Users,
-  Trophy,
-} from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -58,7 +49,7 @@ export default async function DepartmentDetailPage({ params }: Props) {
   const hod = faculty.find((f) => f.is_hod);
 
   return (
-    <div className="container-main section-pad">
+    <div className="container section">
       <PageHeader
         breadcrumbs={[
           { label: "Home", href: "/" },
@@ -69,26 +60,19 @@ export default async function DepartmentDetailPage({ params }: Props) {
         description={`Department of ${dept.name} — SSJCOE`}
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-10">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-ink-7 border border-ink-7 rounded-lg overflow-hidden mb-10">
         {[
-          {
-            icon: GraduationCap,
-            label: "Placed",
-            value: summary.placements,
-          },
-          { icon: Users, label: "Faculty", value: summary.faculty },
-          { icon: FlaskConical, label: "Papers", value: summary.research },
-          { icon: Award, label: "Patents", value: summary.patents },
-          { icon: Calendar, label: "Events", value: summary.events },
-          { icon: Trophy, label: "Sports", value: summary.sports },
+          { label: "Placed", value: summary.placements },
+          { label: "Faculty", value: summary.faculty },
+          { label: "Papers", value: summary.research },
+          { label: "Patents", value: summary.patents },
+          { label: "Events", value: summary.events },
+          { label: "Achievements", value: summary.achievements },
         ].map((s) => (
-          <StatCard
-            key={s.label}
-            label={s.label}
-            value={s.value}
-            icon={<s.icon className="w-4 h-4" />}
-            className="text-center"
-          />
+          <div key={s.label} className="bg-white p-6 text-center">
+            <p className="label mb-3">{s.label}</p>
+            <p className="num-display text-4xl">{s.value}</p>
+          </div>
         ))}
       </div>
 
@@ -97,12 +81,12 @@ export default async function DepartmentDetailPage({ params }: Props) {
           {placements.length > 0 && (
             <section>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-brand-black text-lg">
+                <h2 className="font-bold text-ink text-lg">
                   Recent Placements
                 </h2>
                 <Link
                   href={`/placements?dept=${dept.id}`}
-                  className="text-sm text-brand-saffron hover:underline"
+                  className="text-sm text-ink-2 hover:text-ink hover:underline"
                 >
                   View all
                 </Link>
@@ -117,12 +101,12 @@ export default async function DepartmentDetailPage({ params }: Props) {
           {papers.length > 0 && (
             <section>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-brand-black text-lg">
+                <h2 className="font-bold text-ink text-lg">
                   Recent Research
                 </h2>
                 <Link
                   href="/research"
-                  className="text-sm text-brand-saffron hover:underline"
+                  className="text-sm text-ink-2 hover:text-ink hover:underline"
                 >
                   View all
                 </Link>
@@ -142,8 +126,8 @@ export default async function DepartmentDetailPage({ params }: Props) {
 
         <div className="space-y-6">
           {hod && (
-            <div className="card-base p-5">
-              <h3 className="text-xs font-semibold text-brand-muted uppercase tracking-wider mb-4">
+            <div className="card p-5">
+              <h3 className="label mb-4">
                 Head of Department
               </h3>
               <FacultyCard faculty={hod} department={dept} />
@@ -151,8 +135,8 @@ export default async function DepartmentDetailPage({ params }: Props) {
           )}
 
           {deptStats && (
-            <div className="card-base p-5">
-              <h3 className="text-xs font-semibold text-brand-muted uppercase tracking-wider mb-4">
+            <div className="card p-5">
+              <h3 className="label mb-4">
                 Department Stats ({deptStats.year})
               </h3>
               <div className="space-y-3">
@@ -170,8 +154,8 @@ export default async function DepartmentDetailPage({ params }: Props) {
                     key={s.label}
                     className="flex items-center justify-between text-sm"
                   >
-                    <span className="text-brand-muted">{s.label}</span>
-                    <span className="font-mono font-semibold text-brand-black">
+                    <span className="text-ink-4">{s.label}</span>
+                    <span className="font-mono font-semibold text-ink">
                       {s.value}
                     </span>
                   </div>
@@ -180,8 +164,8 @@ export default async function DepartmentDetailPage({ params }: Props) {
             </div>
           )}
 
-          <div className="card-base p-5">
-            <h3 className="text-xs font-semibold text-brand-muted uppercase tracking-wider mb-4">
+          <div className="card p-5">
+            <h3 className="label mb-4">
               Faculty ({faculty.length})
             </h3>
             <div className="flex flex-col gap-2">
@@ -189,9 +173,9 @@ export default async function DepartmentDetailPage({ params }: Props) {
                 <Link
                   key={f.id}
                   href={`/faculty/${f.id}`}
-                  className="flex items-center gap-3 py-2 hover:bg-brand-bg rounded-lg px-2 -mx-2 transition-colors"
+                  className="flex items-center gap-3 py-2 hover:bg-ink-9 rounded-lg px-2 -mx-2 transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-full bg-brand-border flex items-center justify-center text-xs font-bold text-brand-muted overflow-hidden shrink-0">
+                  <div className="w-8 h-8 rounded-full bg-ink-8 flex items-center justify-center text-xs font-bold text-ink-4 overflow-hidden shrink-0">
                     {f.photo_url ? (
                       <img
                         src={f.photo_url}
@@ -203,10 +187,10 @@ export default async function DepartmentDetailPage({ params }: Props) {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-brand-black truncate">
+                    <p className="text-sm font-medium text-ink truncate">
                       {f.name}
                     </p>
-                    <p className="text-xs text-brand-muted truncate">
+                    <p className="text-xs text-ink-4 truncate">
                       {f.designation}
                     </p>
                   </div>

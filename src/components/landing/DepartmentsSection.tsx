@@ -8,42 +8,37 @@ export function DepartmentsSection({
   departments: Department[];
 }) {
   return (
-    <section className="section-pad bg-white border-y border-brand-border">
-      <div className="container-main">
-        <div className="flex items-center justify-between mb-8">
+    <section className="section bg-white border-y border-ink-7">
+      <div className="container">
+        <div className="flex items-end justify-between mb-10">
           <div>
-            <h2 className="text-2xl font-bold text-brand-black">Departments</h2>
-            <p className="text-brand-muted mt-1">
-              Explore achievements by department
-            </p>
+            <span className="accent-line" />
+            <h2 className="text-3xl">Departments</h2>
           </div>
           <Link
             href="/departments"
-            className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-brand-saffron hover:underline"
+            className="hidden sm:flex items-center gap-1.5 text-sm text-ink-2 hover:text-ink transition-colors"
           >
-            All departments <ArrowRight className="w-4 h-4" />
+            All departments <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-          {departments.map((dept) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          {departments.map((d) => (
             <Link
-              key={dept.id}
-              href={`/departments/${dept.code.toLowerCase()}`}
-              className="card-base p-5 hover:shadow-panel hover:border-brand-saffron/30 transition-all group"
+              key={d.id}
+              href={`/departments/${d.code.toLowerCase()}`}
+              className="card card-hover p-5 group"
             >
-              <div className="w-10 h-10 rounded-lg bg-brand-black flex items-center justify-center mb-3">
-                <span className="font-mono text-brand-saffron font-bold text-xs">
-                  {dept.code}
-                </span>
-              </div>
-              <h3 className="font-semibold text-brand-black text-sm leading-snug mb-1">
-                {dept.name}
-              </h3>
-              <div className="flex items-center gap-1 text-xs text-brand-muted mt-2 group-hover:text-brand-saffron transition-colors">
-                <span>Explore</span>
-                <ArrowRight className="w-3 h-3" />
-              </div>
+              <p className="font-mono font-semibold text-ink-2 text-sm mb-1">
+                {d.code}
+              </p>
+              <p className="text-sm font-medium text-ink leading-snug mb-3">
+                {d.name}
+              </p>
+              <p className="flex items-center gap-1 text-xs text-ink-5 group-hover:text-ink transition-colors">
+                Explore <ArrowRight className="w-3 h-3" />
+              </p>
             </Link>
           ))}
         </div>

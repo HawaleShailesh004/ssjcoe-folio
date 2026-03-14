@@ -1,62 +1,65 @@
 "use client";
 
 import { Search, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 interface FilterBarProps {
   search?: string;
   onSearchChange?: (val: string) => void;
-  searchPlaceholder?: string;
-  filters?: React.ReactNode;
+  placeholder?: string;
+  children?: React.ReactNode;
   onClear?: () => void;
-  hasActiveFilters?: boolean;
-  className?: string;
+  hasFilters?: boolean;
+  resultCount?: number;
+  resultLabel?: string;
 }
 
 export function FilterBar({
   search,
   onSearchChange,
-  searchPlaceholder = "Search...",
-  filters,
+  placeholder = "Search...",
+  children,
   onClear,
-  hasActiveFilters,
-  className,
+  hasFilters,
+  resultCount,
+  resultLabel = "results",
 }: FilterBarProps) {
   return (
-    <div
-      className={cn(
-        "flex flex-col sm:flex-row gap-3 items-start sm:items-center",
-        className
-      )}
-    >
-      {onSearchChange !== undefined && (
-        <div className="relative flex-1 min-w-0 max-w-sm">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-brand-muted" />
-          <Input
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            placeholder={searchPlaceholder}
-            className="pl-9 bg-white border-brand-border"
-          />
-        </div>
-      )}
+    <div className="space-y-3">
+      <div className="flex flex-wrap gap-3 items-center">
+        {onSearchChange !== undefined && (
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-ink-5" />
+            <input
+              value={search}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder={placeholder}
+              className="h-9 pl-9 pr-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink w-64"
+            />
+          </div>
+        )}
 
-      {filters && (
-        <div className="flex flex-wrap gap-2 items-center">{filters}</div>
-      )}
+        {children}
 
-      {hasActiveFilters && onClear && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onClear}
-          className="text-brand-muted hover:text-brand-black gap-1.5"
-        >
-          <X className="w-3.5 h-3.5" />
-          Clear filters
-        </Button>
+        {hasFilters && onClear && (
+          <button
+            type="button"
+            onClick={onClear}
+            className="flex items-center gap-1.5 text-sm text-ink-4 hover:text-ink transition-colors"
+          >
+            <X className="w-3.5 h-3.5" />
+            Clear
+          </button>
+        )}
+      </div>
+
+      {resultCount !== undefined && (
+        <p className="text-sm text-ink-4">
+          <span className="font-mono font-semibold text-ink">
+            {resultCount}
+          </span>{" "}
+          {resultLabel}
+          {hasFilters && " matching filters"}
+        </p>
       )}
     </div>
   );

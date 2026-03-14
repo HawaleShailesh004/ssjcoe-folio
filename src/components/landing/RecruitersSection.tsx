@@ -9,29 +9,32 @@ const RECRUITERS = [
   "L&T",
   "Accenture",
   "HCL",
+  "Hexaware",
+  "Mphasis",
+  "Tech Mahindra",
+  "Cyient",
 ];
 
 export function RecruitersSection() {
   return (
-    <section className="section-pad bg-brand-bg">
-      <div className="container-main">
-        <div className="text-center mb-10">
-          <h2 className="text-2xl font-bold text-brand-black mb-2">
-            Our recruiters
-          </h2>
-          <p className="text-brand-muted">
-            Companies that trust SSJCOE talent
+    <section className="section bg-ink-9">
+      <div className="container">
+        <div className="mb-10">
+          <span className="accent-line" />
+          <h2 className="text-3xl">Our recruiters</h2>
+          <p className="text-base text-ink-4 mt-2">
+            Companies that consistently hire from SSJCOE
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap gap-2">
           {RECRUITERS.map((name) => (
-            <div
+            <span
               key={name}
-              className="card-base px-5 py-3 text-sm font-semibold text-brand-slate hover:shadow-panel transition-shadow"
+              className="card px-4 py-2 text-sm font-medium text-ink-3"
             >
               {name}
-            </div>
+            </span>
           ))}
         </div>
       </div>
