@@ -123,7 +123,7 @@ export function AchievementsClient({
               <select
                 value={level}
                 onChange={(e) => setLevel(e.target.value as AchievementLevel | "all")}
-                className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+                className="select"
               >
                 {LEVELS.map((l) => (
                   <option key={l.value} value={l.value}>
@@ -134,7 +134,7 @@ export function AchievementsClient({
               <select
                 value={deptId}
                 onChange={(e) => setDeptId(e.target.value)}
-                className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+                className="select"
               >
                 <option value="all">All departments</option>
                 {departments.map((d) => (
@@ -148,7 +148,7 @@ export function AchievementsClient({
         </>
       ) : (
         <div className="mb-6 space-y-2" aria-hidden>
-          <div className="h-9 w-48 rounded bg-ink-8" />
+          <div className="h-9 w-48 rounded bg-stone-200" />
           <div className="card p-4 h-14" />
         </div>
       )}
@@ -162,7 +162,7 @@ export function AchievementsClient({
               <button
                 type="button"
                 onClick={clear}
-                className="text-sm text-ink-2 hover:text-ink hover:underline"
+                className="text-sm text-saffron hover:text-saffron-dark hover:underline"
               >
                 Clear filters
               </button>

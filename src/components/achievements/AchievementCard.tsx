@@ -1,11 +1,33 @@
-import { MapPin, Calendar, Trophy } from "lucide-react";
+import {
+  MapPin,
+  Calendar,
+  Trophy,
+  Cpu,
+  Music,
+  BookOpen,
+} from "lucide-react";
+import { getAchievementImage, normalizeImageUrl } from "@/lib/images";
 import type { Achievement, Department } from "@/types";
 
 const LEVEL_BADGE: Record<string, string> = {
   institute: "badge badge-idle",
   state: "badge badge-idle",
-  national: "badge badge-idle",
-  international: "badge badge-idle",
+  national: "badge badge-warn",
+  international: "badge badge-fail",
+};
+
+const TYPE_ICON: Record<string, typeof Trophy> = {
+  sports: Trophy,
+  technical: Cpu,
+  cultural: Music,
+  academic: BookOpen,
+};
+
+const TYPE_LABEL: Record<string, string> = {
+  sports: "Sports",
+  technical: "Technical",
+  cultural: "Cultural",
+  academic: "Academic",
 };
 
 export function AchievementCard({
@@ -15,47 +37,56 @@ export function AchievementCard({
   achievement: Achievement;
   department?: Department;
 }) {
-  return (
-    <div className="card card-hover overflow-hidden">
-      {a.image_url ? (
-        <div className="aspect-video overflow-hidden bg-ink-8">
-          <img
-            src={a.image_url}
-            alt={a.title}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      ) : (
-        <div className="aspect-video bg-ink-8 flex items-center justify-center">
-          <Trophy className="w-6 h-6 text-ink-6" />
-        </div>
-      )}
+  const heroImage = normalizeImageUrl(a.image_url) || getAchievementImage(a.title);
+  const TypeIcon = TYPE_ICON[a.achievement_type] ?? Trophy;
 
-      <div className="p-5">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
+  return (
+    <div className="card card-hover overflow-hidden group">
+      <div className="aspect-video overflow-hidden relative">
+        <img
+          src={heroImage}
+          alt={a.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(26,20,16,0.65) 0%, transparent 55%)",
+          }}
+        />
+
+        <div className="absolute top-3 left-3 flex items-center gap-2">
+          <span className="badge badge-saffron flex items-center gap-1">
+            <TypeIcon className="w-2.5 h-2.5" />
+            {TYPE_LABEL[a.achievement_type]}
+          </span>
           <span
             className={LEVEL_BADGE[a.achievement_level] ?? "badge badge-idle"}
           >
             {a.achievement_level}
           </span>
-          <span className="badge badge-idle capitalize">{a.achievement_type}</span>
-          {a.sport && (
-            <span className="badge badge-idle">{a.sport}</span>
-          )}
-          {department && (
-            <span className="font-mono text-xs text-ink-5">
-              {department.code}
-            </span>
-          )}
         </div>
 
-        <h3 className="text-base font-medium text-ink leading-snug mb-1">
+        {department && (
+          <div className="absolute bottom-3 right-3">
+            <span className="text-xs font-mono font-semibold text-white/80 bg-stone-950/50 px-2 py-0.5 rounded">
+              {department.code}
+            </span>
+          </div>
+        )}
+      </div>
+
+      <div className="p-5">
+        <h3 className="text-base font-medium text-stone-950 leading-snug mb-1">
           {a.title}
         </h3>
-        <p className="text-sm text-ink-2 font-medium mb-2">{a.student_name}</p>
-        <p className="text-sm text-ink-4 clamp-2 mb-3">{a.award}</p>
+        <p className="text-sm text-saffron-dark font-medium mb-2">
+          {a.student_name}
+        </p>
+        <p className="text-sm text-stone-500 clamp-2 mb-3">{a.award}</p>
 
-        <div className="space-y-1.5 pt-3 border-t border-ink-7 text-xs text-ink-4">
+        <div className="space-y-1.5 pt-3 border-t border-stone-100 text-xs text-stone-400">
           {a.venue && (
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3 h-3 shrink-0" />

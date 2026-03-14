@@ -1,5 +1,14 @@
-import { MapPin, Users, Calendar } from "lucide-react";
+import { MapPin, Users, Calendar, Star } from "lucide-react";
+import { getEventImage, normalizeImageUrl } from "@/lib/images";
 import type { Event, Department } from "@/types";
+
+const TYPE_BADGE: Record<string, string> = {
+  technical: "badge badge-idle",
+  cultural: "badge badge-saffron",
+  sports: "badge badge-ok",
+  official: "badge badge-idle",
+  workshop: "badge badge-idle",
+};
 
 export function EventCard({
   event: e,
@@ -8,46 +17,54 @@ export function EventCard({
   event: Event;
   department?: Department;
 }) {
-  const images = Array.isArray(e.images) ? e.images : [];
+  const heroImage = normalizeImageUrl(e.images?.[0]) || getEventImage(e.title);
 
   return (
-    <div className="card card-hover overflow-hidden">
-      {images[0] ? (
-        <div className="aspect-video overflow-hidden bg-ink-8">
-          <img
-            src={images[0]}
-            alt={e.title}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      ) : (
-        <div className="aspect-video bg-ink-8 flex items-center justify-center">
-          <Calendar className="w-6 h-6 text-ink-6" />
-        </div>
-      )}
-
-      <div className="p-5">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="badge badge-idle capitalize">{e.type}</span>
+    <div className="card card-hover overflow-hidden group">
+      <div className="aspect-video overflow-hidden relative">
+        <img
+          src={heroImage}
+          alt={e.title}
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(26,20,16,0.6) 0%, transparent 60%)",
+          }}
+        />
+        <div className="absolute top-3 left-3 flex items-center gap-2">
+          <span
+            className={`${TYPE_BADGE[e.type] ?? "badge badge-idle"} capitalize`}
+          >
+            {e.type}
+          </span>
           {e.is_official && (
-            <span className="text-xs text-ink-2 font-medium">Official</span>
-          )}
-          {department && (
-            <span className="font-mono text-xs text-ink-5">
-              {department.code}
+            <span className="badge badge-saffron flex items-center gap-1">
+              <Star className="w-2.5 h-2.5 fill-current" /> Official
             </span>
           )}
         </div>
+        {department && (
+          <div className="absolute bottom-3 right-3">
+            <span className="text-xs font-mono font-semibold text-white/80 bg-stone-950/50 px-2 py-0.5 rounded">
+              {department.code}
+            </span>
+          </div>
+        )}
+      </div>
 
-        <h3 className="text-base font-medium text-ink leading-snug clamp-2 mb-2">
+      <div className="p-5">
+        <h3 className="text-base font-medium text-stone-950 leading-snug clamp-2 mb-2">
           {e.title}
         </h3>
 
         {e.description && (
-          <p className="text-sm text-ink-4 clamp-2 mb-3">{e.description}</p>
+          <p className="text-sm text-stone-500 clamp-2 mb-3">{e.description}</p>
         )}
 
-        <div className="space-y-1.5 pt-3 border-t border-ink-7 text-xs text-ink-4">
+        <div className="space-y-1.5 pt-3 border-t border-stone-100 text-xs text-stone-400">
           <div className="flex items-center gap-1.5">
             <Calendar className="w-3 h-3 shrink-0" />
             <span>

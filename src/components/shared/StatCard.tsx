@@ -1,23 +1,26 @@
-interface StatCardProps {
+interface Props {
   label: string;
   value: string | number;
   unit?: string;
   sub?: string;
+  accent?: boolean;
 }
 
-export function StatCard({ label, value, unit, sub }: StatCardProps) {
+export function StatCard({ label, value, unit, sub, accent }: Props) {
   return (
-    <div className="card p-6">
+    <div
+      className={`card p-6 ${accent ? "border-l-2 border-l-saffron" : ""}`}
+    >
       <p className="label mb-3">{label}</p>
-      <p className="num-display text-4xl">
+      <p className="num text-4xl">
         {value}
         {unit && (
-          <span className="text-lg font-sans font-normal text-ink-4 ml-1">
+          <span className="text-base font-sans font-normal text-stone-500 ml-1.5">
             {unit}
           </span>
         )}
       </p>
-      {sub && <p className="text-sm text-ink-4 mt-1">{sub}</p>}
+      {sub && <p className="text-sm text-stone-500 mt-1.5">{sub}</p>}
     </div>
   );
 }

@@ -79,7 +79,7 @@ export function ResearchClient({
           <select
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+            className="select"
           >
             <option value="all">All years</option>
             {years.map((y) => (
@@ -92,7 +92,7 @@ export function ResearchClient({
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+            className="select"
           >
             <option value="all">All categories</option>
             {categories.map((c) => (
@@ -105,7 +105,7 @@ export function ResearchClient({
           <select
             value={deptId}
             onChange={(e) => setDeptId(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+            className="select"
           >
             <option value="all">All departments</option>
             {departments.map((d) => (
@@ -126,7 +126,7 @@ export function ResearchClient({
               <button
                 type="button"
                 onClick={clear}
-                className="text-sm text-ink-2 hover:text-ink hover:underline"
+                className="text-sm text-saffron hover:text-saffron-dark hover:underline"
               >
                 Clear filters
               </button>

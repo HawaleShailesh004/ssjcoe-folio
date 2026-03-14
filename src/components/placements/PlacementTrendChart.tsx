@@ -13,11 +13,11 @@ import {
 } from "recharts";
 
 const style = {
-  tick: { fontSize: 11, fill: "#6B6B6B" },
-  grid: "#E8E8E8",
-  bar: "#0A0A0A",
-  line1: "#0A0A0A",
-  line2: "#C8C8C8",
+  tick: { fontSize: 11, fill: "#7A6F65" },
+  grid: "#E8E3DE",
+  bar: "#E8820C",
+  line1: "#E8820C",
+  line2: "#D4CEC9",
 };
 
 export function PlacementTrendChart({
@@ -51,9 +51,9 @@ export function PlacementTrendChart({
               contentStyle={{
                 fontSize: 12,
                 borderRadius: 4,
-                border: "1px solid #E8E8E8",
+                border: "1px solid #E8E3DE",
               }}
-              cursor={{ fill: "#F4F4F4" }}
+              cursor={{ fill: "#FAF7F2" }}
             />
             <Bar
               dataKey="count"
@@ -89,7 +89,7 @@ export function PlacementTrendChart({
               contentStyle={{
                 fontSize: 12,
                 borderRadius: 4,
-                border: "1px solid #E8E8E8",
+                border: "1px solid #E8E3DE",
               }}
             />
             <Line

@@ -71,7 +71,7 @@ export function PlacementsClient({
         count={initialPlacements.length}
       />
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-ink-7 border border-ink-7 rounded-lg overflow-hidden mb-12">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-stone-200 border border-stone-200 rounded-lg overflow-hidden mb-12">
         {[
           { label: "Total placed", value: initialPlacements.length },
           { label: "Avg. package", value: stats.avg, unit: "LPA" },
@@ -80,10 +80,10 @@ export function PlacementsClient({
         ].map((s) => (
           <div key={s.label} className="bg-white p-6">
             <p className="label mb-3">{s.label}</p>
-            <p className="num-display text-4xl">
+            <p className="num text-4xl">
               {s.value}
               {s.unit && (
-                <span className="text-base font-sans font-normal text-ink-4 ml-1">
+                <span className="text-base font-sans font-normal text-stone-500 ml-1.5">
                   {s.unit}
                 </span>
               )}
@@ -112,7 +112,7 @@ export function PlacementsClient({
           <select
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+            className="h-9 px-3 text-sm bg-white border border-stone-200 rounded focus:outline-none focus:border-saffron text-stone-800"
           >
             <option value="all">All years</option>
             {years.map((y) => (
@@ -125,7 +125,7 @@ export function PlacementsClient({
           <select
             value={deptId}
             onChange={(e) => setDeptId(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+            className="h-9 px-3 text-sm bg-white border border-stone-200 rounded focus:outline-none focus:border-saffron text-stone-800"
           >
             <option value="all">All departments</option>
             {departments.map((d) => (
@@ -138,7 +138,7 @@ export function PlacementsClient({
           <select
             value={minPkg}
             onChange={(e) => setMinPkg(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+            className="h-9 px-3 text-sm bg-white border border-stone-200 rounded focus:outline-none focus:border-saffron text-stone-800"
           >
             <option value="0">Any package</option>
             <option value="3">3+ LPA</option>
@@ -148,7 +148,7 @@ export function PlacementsClient({
           </select>
         </FilterBar>
 
-        <div className="flex items-center border border-ink-7 rounded overflow-hidden self-start">
+        <div className="flex items-center border border-stone-200 rounded overflow-hidden self-start">
           {(["list", "grid"] as const).map((v) => (
             <button
               key={v}
@@ -156,8 +156,8 @@ export function PlacementsClient({
               onClick={() => setView(v)}
               className={`px-3 py-1.5 text-xs font-medium transition-colors ${
                 view === v
-                  ? "bg-ink text-white"
-                  : "bg-white text-ink-4 hover:text-ink"
+                  ? "bg-stone-950 text-white"
+                  : "bg-white text-stone-600 hover:text-stone-950"
               }`}
             >
               {v === "list" ? (
@@ -183,7 +183,7 @@ export function PlacementsClient({
               <button
                 type="button"
                 onClick={clear}
-                className="text-sm text-ink-2 hover:text-ink hover:underline"
+                className="text-sm text-saffron hover:text-saffron-dark hover:underline"
               >
                 Clear filters
               </button>
@@ -210,14 +210,14 @@ export function PlacementsClient({
                   onClick={() => setSelected(p)}
                   className="cursor-pointer"
                 >
-                  <td className="font-medium text-ink">{p.student_name}</td>
-                  <td className="text-ink-2 font-medium">{p.company}</td>
-                  <td className="text-ink-4">{p.role}</td>
-                  <td className="text-ink-5 font-mono text-xs">
+                  <td className="font-medium text-stone-950">{p.student_name}</td>
+                  <td className="text-saffron-dark font-medium">{p.company}</td>
+                  <td className="text-stone-600">{p.role}</td>
+                  <td className="text-stone-500 font-mono text-xs">
                     {departments.find((d) => d.id === p.dept_id)?.code ?? "—"}
                   </td>
-                  <td className="text-ink-4 font-mono">{p.year}</td>
-                  <td className="text-right font-mono font-semibold text-ink">
+                  <td className="text-stone-600 font-mono">{p.year}</td>
+                  <td className="text-right font-mono font-semibold text-stone-950">
                     ₹{p.package_lpa} LPA
                   </td>
                 </tr>

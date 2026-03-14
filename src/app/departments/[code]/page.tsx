@@ -12,6 +12,7 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { FacultyCard } from "@/components/faculty/FacultyCard";
 import { ResearchCard } from "@/components/research/ResearchCard";
 import { DepartmentPlacementsGrid } from "@/components/departments/DepartmentPlacementsGrid";
+import { DEPT_IMAGES, normalizeImageUrl } from "@/lib/images";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -60,7 +61,38 @@ export default async function DepartmentDetailPage({ params }: Props) {
         description={`Department of ${dept.name} — SSJCOE`}
       />
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-ink-7 border border-ink-7 rounded-lg overflow-hidden mb-10">
+      {DEPT_IMAGES[dept.code] && (
+        <div
+          className="relative rounded-lg overflow-hidden mb-10"
+          style={{ height: "220px" }}
+        >
+          <img
+            src={DEPT_IMAGES[dept.code]}
+            alt={dept.name}
+            className="w-full h-full object-cover"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to right, rgba(26,20,16,0.85) 0%, rgba(26,20,16,0.3) 100%)",
+            }}
+          />
+          <div className="absolute inset-0 flex items-center px-8">
+            <div>
+              <p className="font-mono text-saffron font-bold text-sm mb-1">
+                {dept.code}
+              </p>
+              <h2 className="font-display text-3xl text-white">{dept.name}</h2>
+              <p className="text-stone-400 text-sm mt-1">
+                Department of {dept.name} · SSJCOE
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-stone-200 border border-stone-200 rounded-lg overflow-hidden mb-10">
         {[
           { label: "Placed", value: summary.placements },
           { label: "Faculty", value: summary.faculty },
@@ -71,7 +103,7 @@ export default async function DepartmentDetailPage({ params }: Props) {
         ].map((s) => (
           <div key={s.label} className="bg-white p-6 text-center">
             <p className="label mb-3">{s.label}</p>
-            <p className="num-display text-4xl">{s.value}</p>
+            <p className="num text-4xl">{s.value}</p>
           </div>
         ))}
       </div>
@@ -81,12 +113,12 @@ export default async function DepartmentDetailPage({ params }: Props) {
           {placements.length > 0 && (
             <section>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-ink text-lg">
+                <h2 className="font-bold text-stone-950 text-lg">
                   Recent Placements
                 </h2>
                 <Link
                   href={`/placements?dept=${dept.id}`}
-                  className="text-sm text-ink-2 hover:text-ink hover:underline"
+                  className="text-sm text-saffron hover:text-saffron-dark hover:underline"
                 >
                   View all
                 </Link>
@@ -101,12 +133,12 @@ export default async function DepartmentDetailPage({ params }: Props) {
           {papers.length > 0 && (
             <section>
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-bold text-ink text-lg">
+                <h2 className="font-bold text-stone-950 text-lg">
                   Recent Research
                 </h2>
                 <Link
                   href="/research"
-                  className="text-sm text-ink-2 hover:text-ink hover:underline"
+                  className="text-sm text-saffron hover:text-saffron-dark hover:underline"
                 >
                   View all
                 </Link>
@@ -154,8 +186,8 @@ export default async function DepartmentDetailPage({ params }: Props) {
                     key={s.label}
                     className="flex items-center justify-between text-sm"
                   >
-                    <span className="text-ink-4">{s.label}</span>
-                    <span className="font-mono font-semibold text-ink">
+                    <span className="text-stone-500">{s.label}</span>
+                    <span className="font-mono font-semibold text-stone-950">
                       {s.value}
                     </span>
                   </div>
@@ -173,24 +205,27 @@ export default async function DepartmentDetailPage({ params }: Props) {
                 <Link
                   key={f.id}
                   href={`/faculty/${f.id}`}
-                  className="flex items-center gap-3 py-2 hover:bg-ink-9 rounded-lg px-2 -mx-2 transition-colors"
+                  className="flex items-center gap-3 py-2 hover:bg-stone-100 rounded-lg px-2 -mx-2 transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-full bg-ink-8 flex items-center justify-center text-xs font-bold text-ink-4 overflow-hidden shrink-0">
-                    {f.photo_url ? (
-                      <img
-                        src={f.photo_url}
-                        alt={f.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      f.name.charAt(0)
-                    )}
+                  <div className="w-8 h-8 rounded-full bg-stone-200 flex items-center justify-center text-xs font-bold text-stone-500 overflow-hidden shrink-0">
+                    {(() => {
+                      const photoSrc = normalizeImageUrl(f.photo_url) ?? f.photo_url ?? "";
+                      return photoSrc ? (
+                        <img
+                          src={photoSrc}
+                          alt={f.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        f.name.charAt(0)
+                      );
+                    })()}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-ink truncate">
+                    <p className="text-sm font-medium text-stone-950 truncate">
                       {f.name}
                     </p>
-                    <p className="text-xs text-ink-4 truncate">
+                    <p className="text-xs text-stone-500 truncate">
                       {f.designation}
                     </p>
                   </div>
