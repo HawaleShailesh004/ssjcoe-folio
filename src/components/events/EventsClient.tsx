@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
+import { usePagination } from "@/hooks/usePagination";
+import { PaginationBar } from "@/components/shared/PaginationBar";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -54,6 +56,29 @@ export function EventsClient({
     });
   }, [initialEvents, search, type, deptId, year]);
 
+  const { page, setPage, totalPages, paginated, reset } = usePagination(
+    filtered,
+    9
+  );
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const handleSearch = (v: string) => {
+    setSearch(v);
+    reset();
+  };
+  const handleType = (t: EventType | "all") => {
+    setType(t);
+    reset();
+  };
+  const handleYear = (v: string) => {
+    setYear(v);
+    reset();
+  };
+  const handleDept = (v: string) => {
+    setDeptId(v);
+    reset();
+  };
+
   const hasFilters =
     search !== "" ||
     type !== "all" ||
@@ -77,27 +102,33 @@ export function EventsClient({
       />
 
       <div className="flex flex-wrap gap-2 mb-6">
-        {EVENT_TYPES.map((t) => (
-          <button
-            key={t.value}
-            type="button"
-            onClick={() => setType(t.value)}
-            className={cn(
-              "px-4 py-1.5 rounded-full text-sm font-medium border transition-all",
-              type === t.value
-                ? "bg-ink text-white border-ink"
-                : "bg-white text-ink-4 border-ink-7 hover:border-ink-6"
-            )}
-          >
-            {t.label}
-          </button>
-        ))}
+        {EVENT_TYPES.map((t) => {
+          const count =
+            t.value === "all"
+              ? initialEvents.length
+              : initialEvents.filter((e) => e.type === t.value).length;
+          const active = type === t.value;
+          return (
+            <button
+              key={t.value}
+              type="button"
+              onClick={() => handleType(t.value)}
+              className={cn(
+                "badge capitalize transition-all",
+                active ? "ring-2 ring-offset-1 ring-current" : "",
+                "badge-idle"
+              )}
+            >
+              {t.label} · {count}
+            </button>
+          );
+        })}
       </div>
 
       <div className="card p-4 mb-6">
         <FilterBar
           search={search}
-          onSearchChange={setSearch}
+          onSearchChange={handleSearch}
           placeholder="Search events..."
           hasFilters={hasFilters}
           onClear={clear}
@@ -106,8 +137,8 @@ export function EventsClient({
         >
           <select
             value={year}
-            onChange={(e) => setYear(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+            onChange={(e) => handleYear(e.target.value)}
+            className="select"
           >
             <option value="all">All years</option>
             {years.map((y) => (
@@ -119,8 +150,8 @@ export function EventsClient({
 
           <select
             value={deptId}
-            onChange={(e) => setDeptId(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+            onChange={(e) => handleDept(e.target.value)}
+            className="select"
           >
             <option value="all">All departments</option>
             {departments.map((d) => (
@@ -141,7 +172,7 @@ export function EventsClient({
               <button
                 type="button"
                 onClick={clear}
-                className="text-sm text-ink-2 hover:text-ink hover:underline"
+                className="text-sm text-saffron hover:text-saffron-dark hover:underline"
               >
                 Clear filters
               </button>
@@ -149,14 +180,29 @@ export function EventsClient({
           }
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((event) => (
-            <EventCard
-              key={event.id}
-              event={event}
-              department={departments.find((d) => d.id === event.dept_id)}
-            />
-          ))}
+        <div ref={resultsRef}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {paginated.map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                department={departments.find((d) => d.id === event.dept_id)}
+              />
+            ))}
+          </div>
+          <PaginationBar
+            page={page}
+            totalPages={totalPages}
+            onPageChange={(p) => {
+              setPage(p);
+              resultsRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }}
+            totalItems={filtered.length}
+            pageSize={9}
+          />
         </div>
       )}
     </div>

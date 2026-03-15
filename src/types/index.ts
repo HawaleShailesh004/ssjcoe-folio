@@ -17,6 +17,10 @@ export interface Department {
   hod_user_id?: string;
   is_active: boolean;
   created_at: string;
+  vision?: string;
+  mission?: string;
+  intro?: string;
+  established_year?: number;
 }
 
 // ─── User ─────────────────────────────────────────────────────────────────────

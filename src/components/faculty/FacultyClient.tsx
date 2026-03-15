@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
+import { usePagination } from "@/hooks/usePagination";
+import { PaginationBar } from "@/components/shared/PaginationBar";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -54,6 +56,25 @@ export function FacultyClient({
     [filtered]
   );
 
+  const { page, setPage, totalPages, paginated, reset } = usePagination(
+    sorted,
+    16
+  );
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const handleSearch = (v: string) => {
+    setSearch(v);
+    reset();
+  };
+  const handleDept = (v: string) => {
+    setDeptId(v);
+    reset();
+  };
+  const handleDesig = (v: string) => {
+    setDesig(v);
+    reset();
+  };
+
   const clear = () => {
     setSearch("");
     setDeptId("all");
@@ -72,12 +93,11 @@ export function FacultyClient({
       <div className="flex flex-wrap gap-2 mb-6">
         <button
           type="button"
-          onClick={() => setDeptId("all")}
+          onClick={() => handleDept("all")}
           className={cn(
-            "px-4 py-1.5 rounded-full text-sm font-medium border transition-all",
-            deptId === "all"
-              ? "bg-ink text-white border-ink"
-              : "bg-white text-ink-4 border-ink-7 hover:border-ink-6"
+            "badge transition-all",
+            deptId === "all" ? "ring-2 ring-offset-1 ring-current" : "",
+            "badge-idle"
           )}
         >
           All · {initialFaculty.length}
@@ -85,16 +105,16 @@ export function FacultyClient({
         {departments.map((d) => {
           const count = initialFaculty.filter((f) => f.dept_id === d.id).length;
           if (!count) return null;
+          const active = deptId === d.id;
           return (
             <button
               key={d.id}
               type="button"
-              onClick={() => setDeptId(d.id)}
+              onClick={() => handleDept(d.id)}
               className={cn(
-                "px-4 py-1.5 rounded-full text-sm font-medium border transition-all",
-                deptId === d.id
-                  ? "bg-ink text-white border-ink"
-                  : "bg-white text-ink-4 border-ink-7 hover:border-ink-6"
+                "badge transition-all",
+                active ? "ring-2 ring-offset-1 ring-current" : "",
+                "badge-idle"
               )}
             >
               {d.code} · {count}
@@ -106,7 +126,7 @@ export function FacultyClient({
       <div className="card p-4 mb-6">
         <FilterBar
           search={search}
-          onSearchChange={setSearch}
+          onSearchChange={handleSearch}
           placeholder="Search by name or specialization..."
           hasFilters={hasFilters}
           onClear={clear}
@@ -131,14 +151,29 @@ export function FacultyClient({
       {sorted.length === 0 ? (
         <EmptyState title="No faculty found" />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {sorted.map((f) => (
-            <FacultyCard
-              key={f.id}
-              faculty={f}
-              department={departments.find((d) => d.id === f.dept_id)}
-            />
-          ))}
+        <div ref={resultsRef}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {paginated.map((f) => (
+              <FacultyCard
+                key={f.id}
+                faculty={f}
+                department={departments.find((d) => d.id === f.dept_id)}
+              />
+            ))}
+          </div>
+          <PaginationBar
+            page={page}
+            totalPages={totalPages}
+            onPageChange={(p) => {
+              setPage(p);
+              resultsRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }}
+            totalItems={sorted.length}
+            pageSize={16}
+          />
         </div>
       )}
     </div>

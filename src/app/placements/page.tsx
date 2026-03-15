@@ -1,28 +1,33 @@
-import { getPlacements, getPlacementYears, getPlacementStats } from "@/lib/placements";
+import { getPlacements, getPlacementYears } from "@/lib/placements";
 import { getDepartments } from "@/lib/stats";
 import { PlacementsClient } from "@/components/placements/PlacementsClient";
+import { PageHeader } from "@/components/shared/PageHeader";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Placements",
-  description:
-    "Browse verified placement records from SSJCOE across all departments.",
+  description: "Placement records and recruitment at SSJCOE.",
 };
 
 export default async function PlacementsPage() {
-  const [placements, years, stats, departments] = await Promise.all([
+  const [placements, years, departments] = await Promise.all([
     getPlacements(),
     getPlacementYears(),
-    getPlacementStats(),
     getDepartments(),
   ]);
 
   return (
-    <PlacementsClient
-      initialPlacements={placements}
-      years={years}
-      stats={stats}
-      departments={departments}
-    />
+    <div className="container section">
+      <PageHeader
+        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Placements" }]}
+        title="Placements"
+        description="Campus recruitment records — companies, packages, and roles"
+      />
+      <PlacementsClient
+        placements={placements}
+        years={years}
+        departments={departments}
+      />
+    </div>
   );
 }

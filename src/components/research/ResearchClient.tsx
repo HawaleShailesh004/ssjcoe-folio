@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
+import { usePagination } from "@/hooks/usePagination";
+import { PaginationBar } from "@/components/shared/PaginationBar";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { ResearchCard } from "@/components/research/ResearchCard";
 import type { ResearchPaper, Department } from "@/types";
+import { cn } from "@/lib/utils";
 
 interface Props {
   initialPapers: ResearchPaper[];
@@ -44,6 +47,29 @@ export function ResearchClient({
     });
   }, [initialPapers, search, year, category, deptId]);
 
+  const { page, setPage, totalPages, paginated, reset } = usePagination(
+    filtered,
+    10
+  );
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const handleSearch = (v: string) => {
+    setSearch(v);
+    reset();
+  };
+  const handleYear = (v: string) => {
+    setYear(v);
+    reset();
+  };
+  const handleCategory = (v: string) => {
+    setCategory(v);
+    reset();
+  };
+  const handleDept = (v: string) => {
+    setDeptId(v);
+    reset();
+  };
+
   const hasFilters =
     search !== "" ||
     year !== "all" ||
@@ -66,10 +92,43 @@ export function ResearchClient({
         count={initialPapers.length}
       />
 
+      <div className="flex flex-wrap gap-2 mb-6">
+        <button
+          type="button"
+          onClick={() => handleCategory("all")}
+          className={cn(
+            "badge transition-all",
+            category === "all" ? "ring-2 ring-offset-1 ring-current" : "",
+            "badge-idle"
+          )}
+        >
+          All · {initialPapers.length}
+        </button>
+        {categories.map((c) => {
+          const count = initialPapers.filter((p) => p.category === c).length;
+          if (!count) return null;
+          const active = category === c;
+          return (
+            <button
+              key={c}
+              type="button"
+              onClick={() => handleCategory(c)}
+              className={cn(
+                "badge transition-all",
+                active ? "ring-2 ring-offset-1 ring-current" : "",
+                "badge-idle"
+              )}
+            >
+              {c} · {count}
+            </button>
+          );
+        })}
+      </div>
+
       <div className="card p-4 mb-6">
         <FilterBar
           search={search}
-          onSearchChange={setSearch}
+          onSearchChange={handleSearch}
           placeholder="Search title, author, journal..."
           hasFilters={hasFilters}
           onClear={clear}
@@ -78,7 +137,7 @@ export function ResearchClient({
         >
           <select
             value={year}
-            onChange={(e) => setYear(e.target.value)}
+            onChange={(e) => handleYear(e.target.value)}
             className="select"
           >
             <option value="all">All years</option>
@@ -91,7 +150,7 @@ export function ResearchClient({
 
           <select
             value={category}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => handleCategory(e.target.value)}
             className="select"
           >
             <option value="all">All categories</option>
@@ -104,7 +163,7 @@ export function ResearchClient({
 
           <select
             value={deptId}
-            onChange={(e) => setDeptId(e.target.value)}
+            onChange={(e) => handleDept(e.target.value)}
             className="select"
           >
             <option value="all">All departments</option>
@@ -134,14 +193,27 @@ export function ResearchClient({
           }
         />
       ) : (
-        <div className="flex flex-col gap-4">
-          {filtered.map((paper) => (
+        <div ref={resultsRef} className="flex flex-col gap-4">
+          {paginated.map((paper) => (
             <ResearchCard
               key={paper.id}
               paper={paper}
               department={departments.find((d) => d.id === paper.dept_id)}
             />
           ))}
+          <PaginationBar
+            page={page}
+            totalPages={totalPages}
+            onPageChange={(p) => {
+              setPage(p);
+              resultsRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }}
+            totalItems={filtered.length}
+            pageSize={10}
+          />
         </div>
       )}
     </div>

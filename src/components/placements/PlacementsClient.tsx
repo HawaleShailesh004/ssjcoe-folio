@@ -1,251 +1,243 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { PageHeader } from "@/components/shared/PageHeader";
+import { useMemo, useRef, useState } from "react";
+import { usePagination } from "@/hooks/usePagination";
+import { PaginationBar } from "@/components/shared/PaginationBar";
 import { FilterBar } from "@/components/shared/FilterBar";
-import { EmptyState } from "@/components/shared/EmptyState";
 import { PlacementCard } from "@/components/placements/PlacementCard";
-import { PlacementTrendChart } from "@/components/placements/PlacementTrendChart";
-import { PlacementDetailModal } from "@/components/placements/PlacementDetailModal";
-import { LayoutGrid, List } from "lucide-react";
 import type { Placement, Department } from "@/types";
+import { normalizeImageUrl } from "@/lib/images";
+import { cn } from "@/lib/utils";
 
 interface Props {
-  initialPlacements: Placement[];
+  placements: Placement[];
   years: number[];
-  stats: {
-    avg: number;
-    highest: number;
-    companies: number;
-    yearlyTrend: { year: number; count: number; avg: number; highest: number }[];
-  };
   departments: Department[];
 }
 
 export function PlacementsClient({
-  initialPlacements,
+  placements,
   years,
-  stats,
   departments,
 }: Props) {
   const [search, setSearch] = useState("");
-  const [year, setYear] = useState("all");
-  const [deptId, setDeptId] = useState("all");
-  const [minPkg, setMinPkg] = useState("0");
-  const [view, setView] = useState<"grid" | "list">("list");
-  const [selected, setSelected] = useState<Placement | null>(null);
+  const [year, setYear] = useState("");
+  const [deptId, setDeptId] = useState("");
+  const [minPkg, setMinPkg] = useState("");
+  const [view, setView] = useState<"grid" | "list">("grid");
+  const resultsRef = useRef<HTMLDivElement>(null);
 
-  const filtered = useMemo(
-    () =>
-      initialPlacements.filter((p) => {
+  const filtered = useMemo(() => {
+    return placements.filter((p) => {
+      if (search) {
         const q = search.toLowerCase();
-        return (
-          (!search ||
-            p.student_name.toLowerCase().includes(q) ||
-            p.company.toLowerCase().includes(q) ||
-            p.role.toLowerCase().includes(q)) &&
-          (year === "all" || Number(p.year) === Number(year)) &&
-          (deptId === "all" || p.dept_id === deptId) &&
-          Number(p.package_lpa) >= Number(minPkg)
-        );
-      }),
-    [initialPlacements, search, year, deptId, minPkg]
+        if (
+          !p.student_name?.toLowerCase().includes(q) &&
+          !p.company?.toLowerCase().includes(q) &&
+          !p.role?.toLowerCase().includes(q)
+        )
+          return false;
+      }
+      if (year && p.year !== Number(year)) return false;
+      if (deptId && p.dept_id !== deptId) return false;
+      if (minPkg && (p.package_lpa ?? 0) < Number(minPkg)) return false;
+      return true;
+    });
+  }, [placements, search, year, deptId, minPkg]);
+
+  const PAGE_SIZE = view === "list" ? 20 : 12;
+  const { page, setPage, totalPages, paginated, reset } = usePagination(
+    filtered,
+    PAGE_SIZE
   );
 
+  const handleSearchChange = (val: string) => {
+    setSearch(val);
+    reset();
+  };
+  const handleYearChange = (val: string) => {
+    setYear(val);
+    reset();
+  };
+  const handleDeptChange = (val: string) => {
+    setDeptId(val);
+    reset();
+  };
+  const handlePkgChange = (val: string) => {
+    setMinPkg(val);
+    reset();
+  };
+
   const hasFilters =
-    search !== "" || year !== "all" || deptId !== "all" || minPkg !== "0";
+    search !== "" || year !== "" || deptId !== "" || minPkg !== "";
 
   const clear = () => {
     setSearch("");
-    setYear("all");
-    setDeptId("all");
-    setMinPkg("0");
+    setYear("");
+    setDeptId("");
+    setMinPkg("");
   };
 
   return (
-    <div className="container section">
-      <PageHeader
-        title="Placements"
-        description="Verified placement records across all departments."
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Placements" }]}
-        count={initialPlacements.length}
-      />
-
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-stone-200 border border-stone-200 rounded-lg overflow-hidden mb-12">
-        {[
-          { label: "Total placed", value: initialPlacements.length },
-          { label: "Avg. package", value: stats.avg, unit: "LPA" },
-          { label: "Highest package", value: stats.highest, unit: "LPA" },
-          { label: "Companies", value: stats.companies },
-        ].map((s) => (
-          <div key={s.label} className="bg-white p-6">
-            <p className="label mb-3">{s.label}</p>
-            <p className="num text-4xl">
-              {s.value}
-              {s.unit && (
-                <span className="text-base font-sans font-normal text-stone-500 ml-1.5">
-                  {s.unit}
-                </span>
+    <div>
+      {/* Year pills — same pattern as Achievements */}
+      <div className="flex flex-wrap gap-2 mb-6">
+        <button
+          type="button"
+          onClick={() => handleYearChange("")}
+          className={cn(
+            "badge transition-all",
+            year === "" ? "ring-2 ring-offset-1 ring-current" : "",
+            "badge-idle"
+          )}
+        >
+          All · {placements.length}
+        </button>
+        {years.map((y) => {
+          const count = placements.filter((p) => p.year === y).length;
+          if (!count) return null;
+          const active = year === String(y);
+          return (
+            <button
+              key={y}
+              type="button"
+              onClick={() => handleYearChange(String(y))}
+              className={cn(
+                "badge transition-all",
+                active ? "ring-2 ring-offset-1 ring-current" : "",
+                "badge-idle"
               )}
-            </p>
-          </div>
-        ))}
+            >
+              {y} · {count}
+            </button>
+          );
+        })}
       </div>
 
-      {stats.yearlyTrend.length > 1 && (
-        <div className="card p-6 mb-10">
-          <p className="label mb-6">Placement trend</p>
-          <PlacementTrendChart data={stats.yearlyTrend} />
-        </div>
-      )}
-
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <div className="card p-4 mb-6">
         <FilterBar
           search={search}
-          onSearchChange={setSearch}
-          placeholder="Search student, company, role..."
+          onSearchChange={handleSearchChange}
+          placeholder="Search name, company, role..."
           hasFilters={hasFilters}
           onClear={clear}
           resultCount={filtered.length}
-          resultLabel="placements"
+          resultLabel={filtered.length === 1 ? "placement" : "placements"}
         >
           <select
             value={year}
-            onChange={(e) => setYear(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-stone-200 rounded focus:outline-none focus:border-saffron text-stone-800"
+            onChange={(e) => handleYearChange(e.target.value)}
+            className="select max-w-[120px]"
           >
-            <option value="all">All years</option>
+            <option value="">All years</option>
             {years.map((y) => (
               <option key={y} value={y}>
                 {y}
               </option>
             ))}
           </select>
-
           <select
             value={deptId}
-            onChange={(e) => setDeptId(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-stone-200 rounded focus:outline-none focus:border-saffron text-stone-800"
+            onChange={(e) => handleDeptChange(e.target.value)}
+            className="select max-w-[140px]"
           >
-            <option value="all">All departments</option>
+            <option value="">All depts</option>
             {departments.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.code}
               </option>
             ))}
           </select>
-
           <select
             value={minPkg}
-            onChange={(e) => setMinPkg(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-stone-200 rounded focus:outline-none focus:border-saffron text-stone-800"
+            onChange={(e) => handlePkgChange(e.target.value)}
+            className="select max-w-[120px]"
           >
-            <option value="0">Any package</option>
-            <option value="3">3+ LPA</option>
-            <option value="5">5+ LPA</option>
-            <option value="8">8+ LPA</option>
-            <option value="12">12+ LPA</option>
+            <option value="">Min LPA</option>
+            {[3, 5, 8, 10, 15, 20].map((n) => (
+              <option key={n} value={n}>
+                ≥{n} LPA
+              </option>
+            ))}
           </select>
-        </FilterBar>
-
-        <div className="flex items-center border border-stone-200 rounded overflow-hidden self-start">
-          {(["list", "grid"] as const).map((v) => (
+          <div className="flex gap-1">
             <button
-              key={v}
               type="button"
-              onClick={() => setView(v)}
-              className={`px-3 py-1.5 text-xs font-medium transition-colors ${
-                view === v
-                  ? "bg-stone-950 text-white"
-                  : "bg-white text-stone-600 hover:text-stone-950"
-              }`}
+              onClick={() => {
+                setView("grid");
+                reset();
+              }}
+              className={`btn ${view === "grid" ? "btn-primary" : "btn-outline"}`}
             >
-              {v === "list" ? (
-                <List className="w-3.5 h-3.5" />
-              ) : (
-                <LayoutGrid className="w-3.5 h-3.5" />
-              )}
+              Grid
             </button>
-          ))}
-        </div>
+            <button
+              type="button"
+              onClick={() => {
+                setView("list");
+                reset();
+              }}
+              className={`btn ${view === "list" ? "btn-primary" : "btn-outline"}`}
+            >
+              List
+            </button>
+          </div>
+        </FilterBar>
       </div>
 
-      {filtered.length === 0 ? (
-        <EmptyState
-          title="No placements found"
-          description={
-            hasFilters
-              ? "Try adjusting your filters."
-              : "No approved placements yet."
-          }
-          action={
-            hasFilters ? (
-              <button
-                type="button"
-                onClick={clear}
-                className="text-sm text-saffron hover:text-saffron-dark hover:underline"
-              >
-                Clear filters
-              </button>
-            ) : undefined
-          }
-        />
-      ) : view === "list" ? (
-        <div className="card overflow-hidden">
-          <table className="data-table">
-            <thead>
-              <tr>
-                <th>Student</th>
-                <th>Company</th>
-                <th>Role</th>
-                <th>Dept</th>
-                <th>Year</th>
-                <th className="text-right">Package</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((p) => (
-                <tr
+      <div ref={resultsRef}>
+        {view === "grid" ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {paginated.map((p) => {
+              const dept = departments.find((d) => d.id === p.dept_id);
+              return (
+                <PlacementCard
                   key={p.id}
-                  onClick={() => setSelected(p)}
-                  className="cursor-pointer"
-                >
-                  <td className="font-medium text-stone-950">{p.student_name}</td>
-                  <td className="text-saffron-dark font-medium">{p.company}</td>
-                  <td className="text-stone-600">{p.role}</td>
-                  <td className="text-stone-500 font-mono text-xs">
-                    {departments.find((d) => d.id === p.dept_id)?.code ?? "—"}
-                  </td>
-                  <td className="text-stone-600 font-mono">{p.year}</td>
-                  <td className="text-right font-mono font-semibold text-stone-950">
-                    ₹{p.package_lpa} LPA
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {filtered.map((p) => (
-            <PlacementCard
-              key={p.id}
-              placement={p}
-              view="grid"
-              department={departments.find((d) => d.id === p.dept_id)}
-              onClick={() => setSelected(p)}
-            />
-          ))}
-        </div>
-      )}
+                  placement={{
+                    ...p,
+                    photo_url: normalizeImageUrl(p.photo_url) ?? p.photo_url,
+                  }}
+                  view="grid"
+                  department={dept}
+                  onClick={() => {}}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {paginated.map((p) => {
+              const dept = departments.find((d) => d.id === p.dept_id);
+              return (
+                <PlacementCard
+                  key={p.id}
+                  placement={{
+                    ...p,
+                    photo_url: normalizeImageUrl(p.photo_url) ?? p.photo_url,
+                  }}
+                  view="list"
+                  department={dept}
+                  onClick={() => {}}
+                />
+              );
+            })}
+          </div>
+        )}
 
-      {selected && (
-        <PlacementDetailModal
-          placement={selected}
-          department={departments.find((d) => d.id === selected.dept_id)}
-          onClose={() => setSelected(null)}
+        <PaginationBar
+          page={page}
+          totalPages={totalPages}
+          onPageChange={(p) => {
+            setPage(p);
+            resultsRef.current?.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }}
+          totalItems={filtered.length}
+          pageSize={PAGE_SIZE}
         />
-      )}
+      </div>
     </div>
   );
 }

@@ -119,25 +119,6 @@ export function HeroSection({
         }}
       />
 
-      {/* Ghost SSJCOE text — decorative background */}
-      <div
-        className="absolute select-none pointer-events-none overflow-hidden"
-        style={{
-          bottom: "10%",
-          right: "-2%",
-          fontSize: "clamp(100px, 18vw, 280px)",
-          fontFamily: "'Cormorant Garamond', serif",
-          fontWeight: 700,
-          letterSpacing: "-0.04em",
-          lineHeight: 1,
-          color: "transparent",
-          WebkitTextStroke: "1px rgba(232,130,12,0.08)",
-          whiteSpace: "nowrap",
-        }}
-      >
-        SSJCOE
-      </div>
-
       <div
         className="container relative z-10"
         style={{
@@ -148,9 +129,9 @@ export function HeroSection({
         }}
       >
         <div className="py-32 max-w-5xl">
-          {/* College identity line */}
+          {/* College identity — logo (includes title) */}
           <div
-            className="flex items-center gap-4 mb-12"
+            className="mb-12"
             style={{
               opacity: 0,
               animation: "fadeUp 0.8s 0.2s ease-out forwards",
@@ -159,16 +140,11 @@ export function HeroSection({
             <img
               src={IMAGES.logo}
               alt="SSJCOE"
-              className="h-10 w-auto object-contain opacity-80"
+              className="h-16 sm:h-20 md:h-24 w-auto object-contain object-left opacity-90"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = "none";
               }}
             />
-            <div className="w-px h-6 bg-stone-700" />
-            <p className="text-xs text-stone-500 tracking-[0.2em] uppercase font-sans">
-              Shivajirao S. Jondhale College of Engineering · Dombivli · Est.
-              1994
-            </p>
           </div>
 
           {/* Main headline */}

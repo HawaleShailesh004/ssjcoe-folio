@@ -1,13 +1,15 @@
 import Link from "next/link";
 
 const LINKS = [
-  { label: "Placements", href: "/placements" },
-  { label: "Research", href: "/research" },
-  { label: "Patents", href: "/patents" },
-  { label: "Events", href: "/events" },
+  { label: "Placements",   href: "/placements"   },
+  { label: "Research",     href: "/research"     },
+  { label: "Patents",      href: "/patents"      },
+  { label: "Events",       href: "/events"       },
   { label: "Achievements", href: "/achievements" },
-  { label: "Faculty", href: "/faculty" },
-  { label: "Departments", href: "/departments" },
+  { label: "Faculty",      href: "/faculty"      },
+  { label: "Departments",  href: "/departments"  },
+  { label: "About",        href: "/about"        },
+  { label: "Contact",      href: "/contact"      },
 ];
 
 export function Footer() {

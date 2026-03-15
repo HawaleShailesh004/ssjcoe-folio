@@ -78,7 +78,7 @@ export function DepartmentsSection({
                   className="absolute inset-0 transition-opacity duration-300"
                   style={{
                     background:
-                      "linear-gradient(to bottom, rgba(255,255,255,0.88) 0%, rgba(255,255,255,0.94) 100%)",
+                      "linear-gradient(to bottom, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.82) 100%)",
                   }}
                 />
 
@@ -86,7 +86,7 @@ export function DepartmentsSection({
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{
                     background:
-                      "linear-gradient(to bottom, rgba(232,130,12,0.06) 0%, rgba(255,255,255,0.9) 100%)",
+                      "linear-gradient(to bottom, rgba(232,130,12,0.15) 0%, rgba(26,20,16,0.55) 100%)",
                   }}
                 />
 
@@ -94,10 +94,10 @@ export function DepartmentsSection({
                   className="relative z-10 p-4 flex flex-col h-full"
                   style={{ minHeight: "180px" }}
                 >
-                  <p className="font-mono font-bold text-saffron text-xs mb-1 tracking-wider">
+                  <p className="font-mono font-bold text-saffron text-xs mb-1.5 tracking-wider group-hover:text-saffron transition-colors">
                     {d.code}
                   </p>
-                  <p className="text-xs font-semibold text-stone-800 leading-tight flex-1">
+                  <p className="text-xs font-semibold text-stone-800 group-hover:text-white leading-tight flex-1 transition-colors duration-300">
                     {d.name}
                   </p>
                   <div className="mt-auto pt-3 flex items-center gap-1 text-xs text-stone-400 group-hover:text-saffron transition-colors">

@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { usePagination } from "@/hooks/usePagination";
+import { PaginationBar } from "@/components/shared/PaginationBar";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -65,6 +67,29 @@ export function AchievementsClient({
     });
   }, [initialAchievements, search, type, level, deptId]);
 
+  const { page, setPage, totalPages, paginated, reset } = usePagination(
+    filtered,
+    9
+  );
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const handleSearch = (v: string) => {
+    setSearch(v);
+    reset();
+  };
+  const handleType = (t: AchievementType | "all") => {
+    setType(t);
+    reset();
+  };
+  const handleLevel = (v: AchievementLevel | "all") => {
+    setLevel(v);
+    reset();
+  };
+  const handleDept = (v: string) => {
+    setDeptId(v);
+    reset();
+  };
+
   const hasFilters =
     search !== "" || type !== "all" || level !== "all" || deptId !== "all";
 
@@ -97,7 +122,7 @@ export function AchievementsClient({
                 <button
                   key={t.value}
                   type="button"
-                  onClick={() => setType(t.value)}
+                  onClick={() => handleType(t.value)}
                   className={cn(
                     "badge capitalize transition-all",
                     active ? "ring-2 ring-offset-1 ring-current" : "",
@@ -113,7 +138,7 @@ export function AchievementsClient({
           <div className="card p-4 mb-6">
             <FilterBar
               search={search}
-              onSearchChange={setSearch}
+              onSearchChange={handleSearch}
               placeholder="Search student, type, sport, achievement..."
               hasFilters={hasFilters}
               onClear={clear}
@@ -122,7 +147,7 @@ export function AchievementsClient({
             >
               <select
                 value={level}
-                onChange={(e) => setLevel(e.target.value as AchievementLevel | "all")}
+                onChange={(e) => handleLevel(e.target.value as AchievementLevel | "all")}
                 className="select"
               >
                 {LEVELS.map((l) => (
@@ -133,7 +158,7 @@ export function AchievementsClient({
               </select>
               <select
                 value={deptId}
-                onChange={(e) => setDeptId(e.target.value)}
+                onChange={(e) => handleDept(e.target.value)}
                 className="select"
               >
                 <option value="all">All departments</option>
@@ -170,14 +195,29 @@ export function AchievementsClient({
           }
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((a) => (
-            <AchievementCard
-              key={a.id}
-              achievement={a}
-              department={departments.find((d) => d.id === a.dept_id)}
-            />
-          ))}
+        <div ref={resultsRef}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {paginated.map((a) => (
+              <AchievementCard
+                key={a.id}
+                achievement={a}
+                department={departments.find((d) => d.id === a.dept_id)}
+              />
+            ))}
+          </div>
+          <PaginationBar
+            page={page}
+            totalPages={totalPages}
+            onPageChange={(p) => {
+              setPage(p);
+              resultsRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }}
+            totalItems={filtered.length}
+            pageSize={9}
+          />
         </div>
       )}
     </div>

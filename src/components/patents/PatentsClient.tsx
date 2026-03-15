@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
+import { usePagination } from "@/hooks/usePagination";
+import { PaginationBar } from "@/components/shared/PaginationBar";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
@@ -42,6 +44,25 @@ export function PatentsClient({
     });
   }, [initialPatents, search, status, deptId]);
 
+  const { page, setPage, totalPages, paginated, reset } = usePagination(
+    filtered,
+    12
+  );
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const handleSearch = (v: string) => {
+    setSearch(v);
+    reset();
+  };
+  const handleStatus = (s: PatentStatus | "all") => {
+    setStatus(s);
+    reset();
+  };
+  const handleDept = (v: string) => {
+    setDeptId(v);
+    reset();
+  };
+
   const hasFilters =
     search !== "" || status !== "all" || deptId !== "all";
 
@@ -64,6 +85,13 @@ export function PatentsClient({
       {mounted ? (
         <>
           <div className="flex flex-wrap gap-2 mb-6">
+            <button
+              type="button"
+              onClick={() => handleStatus("all")}
+              className={`badge transition-all ${status === "all" ? "ring-2 ring-offset-1 ring-current" : ""} badge-idle`}
+            >
+              All · {initialPatents.length}
+            </button>
             {(["filed", "published", "granted"] as const).map((s) => {
               const count = initialPatents.filter(
                 (p) => p.patent_status === s
@@ -73,7 +101,7 @@ export function PatentsClient({
                 <button
                   key={s}
                   type="button"
-                  onClick={() => setStatus(active ? "all" : s)}
+                  onClick={() => handleStatus(s)}
                   className={`badge capitalize transition-all ${active ? "ring-2 ring-offset-1 ring-current" : ""} ${
                     s === "filed"
                       ? "badge-idle"
@@ -91,7 +119,7 @@ export function PatentsClient({
           <div className="card p-4 mb-6">
             <FilterBar
               search={search}
-              onSearchChange={setSearch}
+              onSearchChange={handleSearch}
               placeholder="Search patent title or inventor..."
               hasFilters={hasFilters}
               onClear={clear}
@@ -100,8 +128,8 @@ export function PatentsClient({
             >
               <select
                 value={deptId}
-                onChange={(e) => setDeptId(e.target.value)}
-                className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+                onChange={(e) => handleDept(e.target.value)}
+                className="select"
               >
                 <option value="all">All departments</option>
                 {departments.map((d) => (
@@ -129,7 +157,7 @@ export function PatentsClient({
               <button
                 type="button"
                 onClick={clear}
-                className="text-sm text-ink-2 hover:text-ink hover:underline"
+                className="text-sm text-saffron hover:text-saffron-dark hover:underline"
               >
                 Clear filters
               </button>
@@ -137,14 +165,29 @@ export function PatentsClient({
           }
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {filtered.map((patent) => (
-            <PatentCard
-              key={patent.id}
-              patent={patent}
-              department={departments.find((d) => d.id === patent.dept_id)}
-            />
-          ))}
+        <div ref={resultsRef}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {paginated.map((patent) => (
+              <PatentCard
+                key={patent.id}
+                patent={patent}
+                department={departments.find((d) => d.id === patent.dept_id)}
+              />
+            ))}
+          </div>
+          <PaginationBar
+            page={page}
+            totalPages={totalPages}
+            onPageChange={(p) => {
+              setPage(p);
+              resultsRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+              });
+            }}
+            totalItems={filtered.length}
+            pageSize={12}
+          />
         </div>
       )}
     </div>

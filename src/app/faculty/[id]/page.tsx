@@ -4,6 +4,7 @@ import {
   getFacultyPatents,
 } from "@/lib/faculty";
 import { getDepartments } from "@/lib/stats";
+import { normalizeImageUrl, IMAGES } from "@/lib/images";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/shared/PageHeader";
 import {
@@ -50,6 +51,11 @@ export default async function FacultyProfilePage({ params }: Props) {
     ? faculty.specialization
     : [];
 
+  const photoSrc =
+    department?.code === "IT" && faculty.is_hod
+      ? IMAGES.faculty_ithod
+      : (normalizeImageUrl(faculty.photo_url) ?? faculty.photo_url ?? "");
+
   return (
     <div className="container section">
       <PageHeader
@@ -65,9 +71,9 @@ export default async function FacultyProfilePage({ params }: Props) {
         <div className="lg:col-span-1">
           <div className="card p-6 sticky top-24">
             <div className="relative w-24 h-24 rounded-full overflow-hidden bg-ink-8 mx-auto mb-4">
-              {faculty.photo_url ? (
+              {photoSrc ? (
                 <img
-                  src={faculty.photo_url}
+                  src={photoSrc}
                   alt={faculty.name}
                   className="w-full h-full object-cover"
                 />

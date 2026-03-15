@@ -6,13 +6,15 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const NAV = [
-  { label: "Placements", href: "/placements" },
-  { label: "Research", href: "/research" },
-  { label: "Patents", href: "/patents" },
-  { label: "Events", href: "/events" },
+  { label: "Placements",   href: "/placements"   },
+  { label: "Research",     href: "/research"     },
+  { label: "Patents",      href: "/patents"      },
+  { label: "Events",       href: "/events"       },
   { label: "Achievements", href: "/achievements" },
-  { label: "Faculty", href: "/faculty" },
-  { label: "Departments", href: "/departments" },
+  { label: "Faculty",      href: "/faculty"      },
+  { label: "Departments",  href: "/departments"  },
+  { label: "About",        href: "/about"        },
+  { label: "Contact",      href: "/contact"      },
 ];
 
 export function Header() {

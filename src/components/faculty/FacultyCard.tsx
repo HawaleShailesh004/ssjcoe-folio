@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Crown, Mail, ArrowRight } from "lucide-react";
-import { normalizeImageUrl } from "@/lib/images";
+import { normalizeImageUrl, IMAGES } from "@/lib/images";
 import type { Faculty, Department } from "@/types";
 
 export function FacultyCard({
@@ -12,7 +12,10 @@ export function FacultyCard({
   faculty: Faculty;
   department?: Department;
 }) {
-  const photoSrc = normalizeImageUrl(f.photo_url) ?? f.photo_url ?? "";
+  const photoSrc =
+    department?.code === "IT" && f.is_hod
+      ? IMAGES.faculty_ithod
+      : (normalizeImageUrl(f.photo_url) ?? f.photo_url ?? "");
   const specialization = Array.isArray(f.specialization) ? f.specialization : [];
 
   return (

@@ -21,22 +21,22 @@ export function ParallaxImage({
   children,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null); // track the CONTAINER
-  const bgRef        = useRef<HTMLDivElement>(null); // move the BG
+  const bgRef = useRef<HTMLDivElement>(null); // move the BG
 
   useEffect(() => {
     const container = containerRef.current;
-    const bg        = bgRef.current;
+    const bg = bgRef.current;
     if (!container || !bg) return;
 
     const handleScroll = () => {
       // Use container rect — recalculated every event, always fresh
-      const rect        = container.getBoundingClientRect();
-      const windowH     = window.innerHeight;
+      const rect = container.getBoundingClientRect();
+      const windowH = window.innerHeight;
 
       // How far the section center is from the viewport center
-      const sectionCenter  = rect.top + rect.height / 2;
+      const sectionCenter = rect.top + rect.height / 2;
       const viewportCenter = windowH / 2;
-      const offset         = (sectionCenter - viewportCenter) * speed;
+      const offset = (sectionCenter - viewportCenter) * speed;
 
       bg.style.transform = `translate3d(0, ${offset}px, 0)`;
     };
@@ -58,7 +58,7 @@ export function ParallaxImage({
         className="absolute bg-cover bg-center will-change-transform"
         style={{
           backgroundImage: `url('${src}')`,
-          inset: "-25% 0",   // extra height top and bottom to avoid gaps during movement
+          inset: "-25% 0", // extra height top and bottom to avoid gaps during movement
           height: "150%",
           top: "-25%",
         }}
@@ -69,9 +69,7 @@ export function ParallaxImage({
 
       {/* Content */}
       {children && (
-        <div className="relative z-10 h-full flex items-center">
-          {children}
-        </div>
+        <div className="relative z-10 h-full flex items-center">{children}</div>
       )}
     </div>
   );
