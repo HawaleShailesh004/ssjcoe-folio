@@ -91,6 +91,9 @@ export const DEPT_IMAGES: Record<string, string> = {
   CS: `${P}/depts/Computerl-Engineering.jpg`,
   MECH: `${P}/depts/Mechanical-Engineering.jpg`,
   ENTC: `${P}/depts/Electronics-Telecomm.-Engineering.jpg`,
+  // Civil uses the same image as Mechanical
+  CIV: `${P}/depts/Mechanical-Engineering.jpg`,
+  CIVIL: `${P}/depts/Mechanical-Engineering.jpg`,
   CHEM: `${P}/depts/Chemical-Engineering.jpg`,
   AIML: `${P}/depts/AI-and-Machine-Learning.jpg`,
   HUMS: `${P}/depts/Humanities-Sciences.jpg`,
