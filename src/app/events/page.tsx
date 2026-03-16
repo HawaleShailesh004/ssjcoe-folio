@@ -15,7 +15,12 @@ export default async function EventsPage() {
     getEvents(),
     getDepartments(),
   ]);
+
+  const today = new Date().toISOString().split("T")[0];
+  const upcomingCount = events.filter((e) => e.date >= today).length;
+  const pastCount = events.filter((e) => e.date < today).length;
   const yearsCovered = new Set(events.map((e) => e.year)).size;
+
   return (
     <>
       <PageHero
@@ -25,7 +30,8 @@ export default async function EventsPage() {
         image={IMAGES.event_techfest}
         crumbs={[{ label: "Home", href: "/" }, { label: "Events" }]}
         stats={[
-          { value: `${events.length}+`, label: "Events recorded" },
+          { value: String(upcomingCount), label: "Upcoming" },
+          { value: String(pastCount), label: "Past events" },
           { value: String(yearsCovered), label: "Years covered" },
         ]}
       />
