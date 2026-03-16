@@ -4,10 +4,31 @@ import { useEffect } from "react";
 import { X, Users, Hash, Calendar, FileText } from "lucide-react";
 import type { Patent, Department } from "@/types";
 
-const STATUS_STYLES: Record<string, { className: string; label: string }> = {
-  granted:   { className: "badge-ok",   label: "Patent Granted" },
-  published: { className: "badge-saffron", label: "Published" },
-  filed:     { className: "badge-idle",  label: "Filed" },
+const STATUS_STYLES: Record<
+  string,
+  { className: string; label: string; bg: string; border: string; text: string }
+> = {
+  granted: {
+    className: "badge-ok",
+    label: "Patent Granted",
+    bg: "#F0FDF4",
+    border: "#BBF7D0",
+    text: "#15622A",
+  },
+  published: {
+    className: "badge-saffron",
+    label: "Published",
+    bg: "#FDF0E0",
+    border: "#F4A84A",
+    text: "#1A1410",
+  },
+  filed: {
+    className: "badge-idle",
+    label: "Filed",
+    bg: "#F2EDE8",
+    border: "#D4CEC9",
+    text: "#5C5248",
+  },
 };
 
 interface Props {
