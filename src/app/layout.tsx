@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: {
-    default: "SSJCOE Folio — A verified record of excellence",
+    default: "SSJCOE Folio - A verified record of excellence",
     template: "%s · SSJCOE Folio",
   },
   description:
@@ -44,14 +44,14 @@ export default function RootLayout({
         <main className="pt-14">{children}</main>
         <Footer />
         <Toaster
-        position="bottom-right"
-        toastOptions={{
-          style: {
-            fontFamily: "'Outfit', sans-serif",
-            fontSize: "13px",
-          },
-        }}
-      />
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              fontFamily: "'Outfit', sans-serif",
+              fontSize: "13px",
+            },
+          }}
+        />
       </body>
     </html>
   );
