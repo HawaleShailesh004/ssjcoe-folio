@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Mail, Phone, MapPin, Clock, ExternalLink } from "lucide-react";
 import { IMAGES } from "@/lib/images";
+import { ParallaxHeroBg } from "@/components/shared/ParallaxHeroBg";
 import { RevealOnScroll } from "@/components/shared/RevealOnScroll";
 import { StaggerReveal } from "@/components/shared/StaggerReveal";
 
@@ -43,15 +44,12 @@ export default function ContactPage() {
       {/* Hero */}
       <section
         className="relative overflow-hidden bg-stone-950"
-        style={{ minHeight: "300px" }}
+        style={{ minHeight: "360px" }}
       >
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-10"
-          style={{ backgroundImage: `url('${IMAGES.campus_admission}')` }}
-        />
+        <ParallaxHeroBg image={IMAGES.campus_admission} opacity={0.1} />
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(135deg, rgba(12,10,9,0.97) 0%, rgba(12,10,9,0.85) 100%)" }}
+          style={{ background: "linear-gradient(135deg, rgba(12,10,9,0.88) 0%, rgba(12,10,9,0.72) 100%)" }}
         />
         <div className="absolute inset-0 bg-grain opacity-25 pointer-events-none" />
 

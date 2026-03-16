@@ -191,7 +191,7 @@ export function DepartmentsGrid({ summaries }: Props) {
                     {Number(summary.avgPackage) > 0 && (
                       <div className="pt-4 border-t border-stone-100 flex items-center justify-between">
                         <p className="caption">Avg. package</p>
-                        <p className="num text-sm text-green-700">
+                        <p className="num text-sm text-ok">
                           ₹{summary.avgPackage} LPA
                         </p>
                       </div>

@@ -76,11 +76,8 @@ export function StatsSection({ stats }: { stats: Stats }) {
 
       {/* Subtle campus watermark */}
       <div
-        className="absolute inset-0 opacity-[0.018] bg-cover bg-center"
-        style={{
-          backgroundImage: `url('${IMAGES.campus_about}')`,
-          filter: "blur(6px)",
-        }}
+        className="absolute inset-0 opacity-[0.02] bg-cover bg-center pointer-events-none"
+        style={{ backgroundImage: `url('${IMAGES.campus_ict}')` }}
       />
 
       <div className="container relative z-10">

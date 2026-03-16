@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { usePagination } from "@/hooks/usePagination";
 import { PaginationBar } from "@/components/shared/PaginationBar";
-import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { AchievementCard } from "@/components/achievements/AchievementCard";
@@ -101,14 +100,7 @@ export function AchievementsClient({
   };
 
   return (
-    <div className="container section">
-      <PageHeader
-        title="Achievements"
-        description={`${initialAchievements.length} achievements by SSJCOE students — sports, technical, cultural and academic.`}
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Achievements" }]}
-        count={initialAchievements.length}
-      />
-
+    <>
       {mounted ? (
         <>
           <div className="flex flex-wrap gap-2 mb-6">
@@ -220,6 +212,6 @@ export function AchievementsClient({
           />
         </div>
       )}
-    </div>
+    </>
   );
 }

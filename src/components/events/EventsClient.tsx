@@ -3,7 +3,6 @@
 import { useState, useMemo, useRef } from "react";
 import { usePagination } from "@/hooks/usePagination";
 import { PaginationBar } from "@/components/shared/PaginationBar";
-import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { EventCard } from "@/components/events/EventCard";
@@ -93,14 +92,7 @@ export function EventsClient({
   };
 
   return (
-    <div className="container section">
-      <PageHeader
-        title="Events"
-        description={`${initialEvents.length} events conducted across SSJCOE departments.`}
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Events" }]}
-        count={initialEvents.length}
-      />
-
+    <>
       <div className="flex flex-wrap gap-2 mb-6">
         {EVENT_TYPES.map((t) => {
           const count =
@@ -205,6 +197,6 @@ export function EventsClient({
           />
         </div>
       )}
-    </div>
+    </>
   );
 }

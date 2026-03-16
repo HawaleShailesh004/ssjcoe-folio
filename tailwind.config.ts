@@ -29,19 +29,18 @@ const config: Config = {
         50: "#FAF7F2", // Page bg — warm cream
       },
 
-      // Saffron — SSJCOE's identity color
+      // Saffron — SSJCOE's identity color (strict palette)
       saffron: {
-        DEFAULT: "#E8820C", // Primary accent
-        dark: "#C46D08", // Hover state
-        light: "#FDF0E0", // Tint background
-        muted: "#F4A84A", // Secondary uses
+        DEFAULT: "#E8820C",
+        dark: "#C2410C",
+        light: "#FFF7ED",
+        muted: "#F4A84A",
       },
 
-      // Status — warm tones to match palette
-      ok: { DEFAULT: "#15622A", bg: "#F0FDF4", border: "#BBF7D0" },
-      warn: { DEFAULT: "#8A4B08", bg: "#FFF7ED", border: "#FED7AA" },
-      fail: { DEFAULT: "#8B1C1C", bg: "#FFF1F1", border: "#FECACA" },
-      idle: { DEFAULT: "#5C5248", bg: "#F2EDE8", border: "#D4CEC9" },
+      // Status — only for data states (package amounts, patent granted, etc.)
+      ok: { DEFAULT: "#15803D", bg: "#F0FDF4", border: "#86EFAC" },
+      warn: { DEFAULT: "#92400E", bg: "#FFFBEB", border: "#FCD34D" },
+      idle: { DEFAULT: "#5C5248", bg: "#F5F5F4", border: "#D6D3D1" },
     },
 
     spacing: {

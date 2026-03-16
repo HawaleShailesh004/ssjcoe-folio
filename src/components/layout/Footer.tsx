@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Logo } from "@/components/shared/Logo";
 
 const LINKS = [
   { label: "Placements",   href: "/placements"   },
@@ -19,23 +20,11 @@ export function Footer() {
         <div className="py-16 grid grid-cols-1 md:grid-cols-3 gap-12">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-7 h-7 bg-saffron flex items-center justify-center rounded-sm flex-shrink-0">
-                <span className="font-mono text-white text-[10px] font-bold">
-                  SS
-                </span>
-              </div>
-              <div>
-                <p className="font-display text-lg text-white leading-none">
-                  Jondhale Folio
-                </p>
-                <p className="text-[10px] text-stone-500 tracking-wider uppercase mt-0.5">
-                  SSJCOE
-                </p>
-              </div>
+            <div className="mb-5">
+              <Logo size="footer" link />
             </div>
             <p className="text-sm leading-relaxed text-stone-500 max-w-xs">
-              A record of excellence. A proof of potential.
+              A verified record of excellence.
             </p>
             <p className="text-xs text-stone-600 mt-4">
               Shivajirao S. Jondhale College of Engineering
@@ -90,7 +79,7 @@ export function Footer() {
 
         <div className="border-t border-stone-800 py-6 flex flex-col sm:flex-row items-center justify-between gap-2">
           <p className="text-xs text-stone-600">
-            © {new Date().getFullYear()} Jondhale Folio · SSJCOE
+            © {new Date().getFullYear()} SSJCOE Folio
           </p>
           <p className="text-xs text-stone-700">
             Data verified by college · Not the official website

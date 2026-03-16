@@ -1,6 +1,8 @@
 import { getEvents } from "@/lib/events";
 import { getDepartments } from "@/lib/stats";
 import { EventsClient } from "@/components/events/EventsClient";
+import { PageHero } from "@/components/shared/PageHero";
+import { IMAGES } from "@/lib/images";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,7 +15,23 @@ export default async function EventsPage() {
     getEvents(),
     getDepartments(),
   ]);
+  const yearsCovered = new Set(events.map((e) => e.year)).size;
   return (
-    <EventsClient initialEvents={events} departments={departments} />
+    <>
+      <PageHero
+        title="Events"
+        subtitle="Technical festivals, cultural programmes, workshops, and official ceremonies at SSJCOE."
+        ghostText="EVENTS"
+        image={IMAGES.event_techfest}
+        crumbs={[{ label: "Home", href: "/" }, { label: "Events" }]}
+        stats={[
+          { value: `${events.length}+`, label: "Events recorded" },
+          { value: String(yearsCovered), label: "Years covered" },
+        ]}
+      />
+      <div className="container section">
+        <EventsClient initialEvents={events} departments={departments} />
+      </div>
+    </>
   );
 }

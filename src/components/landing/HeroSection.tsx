@@ -69,7 +69,7 @@ export function HeroSection({
   return (
     <section
       className="relative overflow-hidden bg-stone-950"
-      style={{ minHeight: "100vh" }}
+      style={{ minHeight: "108vh" }}
     >
       {/* Parallax background */}
       <div
@@ -85,12 +85,12 @@ export function HeroSection({
         }}
       />
 
-      {/* Layered overlays */}
+      {/* Layered overlays — slightly lighter */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(135deg, rgba(26,20,16,0.97) 0%, rgba(26,20,16,0.85) 50%, rgba(26,20,16,0.92) 100%)",
+            "linear-gradient(135deg, rgba(26,20,16,0.90) 0%, rgba(26,20,16,0.78) 50%, rgba(26,20,16,0.86) 100%)",
         }}
       />
 
@@ -122,7 +122,7 @@ export function HeroSection({
       <div
         className="container relative z-10"
         style={{
-          minHeight: "100vh",
+          minHeight: "108vh",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -154,6 +154,7 @@ export function HeroSection({
               animation: "fadeUp 0.8s 0.4s ease-out forwards",
             }}
           >
+            <span className="block w-8 h-0.5 bg-saffron mb-6" />
             <h1
               className="font-display text-white leading-[0.92]"
               style={{ fontSize: "clamp(56px, 9vw, 120px)" }}

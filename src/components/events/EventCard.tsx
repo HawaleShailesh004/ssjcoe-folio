@@ -3,11 +3,11 @@ import { getEventImage, normalizeImageUrl } from "@/lib/images";
 import type { Event, Department } from "@/types";
 
 const TYPE_BADGE: Record<string, string> = {
-  technical: "badge badge-idle",
-  cultural: "badge badge-saffron",
-  sports: "badge badge-ok",
-  official: "badge badge-idle",
-  workshop: "badge badge-idle",
+  technical: "badge-saffron",
+  cultural: "badge-idle",
+  sports: "badge-idle",
+  official: "badge-idle",
+  workshop: "badge-saffron",
 };
 
 export function EventCard({
@@ -36,7 +36,7 @@ export function EventCard({
         />
         <div className="absolute top-3 left-3 flex items-center gap-2">
           <span
-            className={`${TYPE_BADGE[e.type] ?? "badge badge-idle"} capitalize`}
+            className={`badge ${TYPE_BADGE[e.type] ?? "badge-idle"} capitalize`}
           >
             {e.type}
           </span>

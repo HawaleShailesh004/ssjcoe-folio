@@ -7,22 +7,26 @@ import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: {
-    default: "Jondhale Folio — SSJCOE",
-    template: "%s | Jondhale Folio",
+    default: "SSJCOE Folio — A verified record of excellence",
+    template: "%s · SSJCOE Folio",
   },
   description:
-    "A record of excellence from SSJCOE. Placements, research, patents, events and achievements — all in one place.",
+    "Placements, research, patents, events and achievements from Shivajirao S. Jondhale College of Engineering, Dombivli.",
   keywords: [
     "SSJCOE",
     "placements",
     "research",
     "engineering college",
     "Jondhale",
+    "Dombivli",
   ],
+  icons: {
+    icon: "/favicon.svg",
+  },
   openGraph: {
-    title: "Jondhale Folio",
-    description: "A record of excellence. A proof of potential.",
-    siteName: "Jondhale Folio",
+    title: "SSJCOE Folio",
+    description: "A verified record of excellence.",
+    siteName: "SSJCOE Folio",
     type: "website",
   },
 };
@@ -37,7 +41,7 @@ export default function RootLayout({
       <body suppressHydrationWarning>
         <ScrollProgress />
         <Header />
-        <main>{children}</main>
+        <main className="pt-14">{children}</main>
         <Footer />
         <Toaster
         position="bottom-right"

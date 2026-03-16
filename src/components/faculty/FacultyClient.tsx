@@ -3,7 +3,6 @@
 import { useState, useMemo, useRef } from "react";
 import { usePagination } from "@/hooks/usePagination";
 import { PaginationBar } from "@/components/shared/PaginationBar";
-import { PageHeader } from "@/components/shared/PageHeader";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { FacultyCard } from "@/components/faculty/FacultyCard";
@@ -82,14 +81,7 @@ export function FacultyClient({
   };
 
   return (
-    <div className="container section">
-      <PageHeader
-        title="Faculty"
-        description={`${initialFaculty.length} faculty members across all departments.`}
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Faculty" }]}
-        count={initialFaculty.length}
-      />
-
+    <>
       <div className="flex flex-wrap gap-2 mb-6">
         <button
           type="button"
@@ -136,7 +128,7 @@ export function FacultyClient({
           <select
             value={desig}
             onChange={(e) => setDesig(e.target.value)}
-            className="h-9 px-3 text-sm bg-white border border-ink-7 rounded focus:outline-none focus:border-ink text-ink-3"
+            className="select"
           >
             <option value="all">All designations</option>
             {designations.map((d) => (
@@ -176,6 +168,6 @@ export function FacultyClient({
           />
         </div>
       )}
-    </div>
+    </>
   );
 }

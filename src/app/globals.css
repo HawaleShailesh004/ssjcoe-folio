@@ -1,3 +1,52 @@
+/*
+ ═══════════════════════════════════════════════════════════
+  JONDHALE FOLIO — STRICT COLOUR SYSTEM
+  Only these values are permitted anywhere in the codebase.
+  No Tailwind blue-*, green-*, purple-*, red-* etc.
+  No hardcoded hex values outside this file.
+ ═══════════════════════════════════════════════════════════
+
+  PRIMARY
+  Saffron:       #E8820C   (buttons, accents, active states)
+  Saffron dark:  #C2410C   (hover on saffron)
+  Saffron light: #FFF7ED   (saffron tint backgrounds)
+  Saffron border: rgba(232,130,12,0.20)
+
+  NEUTRALS (stone scale only)
+  stone-950:  #0C0A09   (page titles, hero headings)
+  stone-900:  #1C1917   (sub-headings)
+  stone-800:  #292524   (body text)
+  stone-700:  #44403C   (secondary body)
+  stone-600:  #57534E   (muted text)
+  stone-500:  #78716C   (labels, captions)
+  stone-400:  #A8A29E   (placeholders, hints)
+  stone-300:  #D6D3D1   (borders, dividers)
+  stone-200:  #E7E5E4   (card borders)
+  stone-100:  #F5F5F4   (subtle backgrounds)
+  stone-50:   #FAFAF9   (page background)
+  white:      #FFFFFF   (card backgrounds)
+
+  DARK SURFACES (for hero sections, dark cards)
+  dark-950:   #0C0A09
+  dark-900:   #1C1917
+  dark-800:   #292524
+
+  STATUS (sparingly — only for data states)
+  ok-text:    #15803D   (package amounts, success states only)
+  ok-bg:      #F0FDF4
+  ok-border:  #86EFAC
+
+  warn-text:  #92400E   (warnings only)
+  warn-bg:    #FFFBEB
+  warn-border:#FCD34D
+
+  NEVER USE:
+  - blue-*, indigo-*, purple-*, pink-*, teal-*, cyan-*
+  - Any color not in this list
+  - Random Tailwind color classes for decoration
+  - Hardcoded hex values in component files
+*/
+
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
 
 @import "tailwindcss";
@@ -337,26 +386,17 @@
     font-family: var(--font-sans);
   }
 
+  /* Badges — theme colours only */
   .badge-ok {
     background: #F0FDF4;
     color: #15803D;
     border-color: #86EFAC;
   }
 
-  .text-ok-DEFAULT {
-    color: var(--color-ok);
-  }
-
   .badge-warn {
     background: #FFFBEB;
     color: #92400E;
     border-color: #FCD34D;
-  }
-
-  .badge-fail {
-    background: #FEF2F2;
-    color: #B91C1C;
-    border-color: #FCA5A5;
   }
 
   .badge-idle {
@@ -368,7 +408,17 @@
   .badge-saffron {
     background: #FFF7ED;
     color: #C2410C;
-    border-color: #FED7AA;
+    border-color: rgba(232, 130, 12, 0.35);
+  }
+
+  .badge-dark {
+    background: #1C1917;
+    color: #A8A29E;
+    border-color: #292524;
+  }
+
+  .text-ok-DEFAULT {
+    color: var(--color-ok);
   }
 
   .data-table {

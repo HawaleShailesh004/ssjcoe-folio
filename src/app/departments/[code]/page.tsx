@@ -20,6 +20,7 @@ import {
   Building2,
 } from "lucide-react";
 import { DEPT_IMAGES, IMAGES, normalizeImageUrl } from "@/lib/images";
+import { ParallaxHeroBg } from "@/components/shared/ParallaxHeroBg";
 import { VisionMissionSection } from "@/components/shared/VisionMissionSection";
 import { RevealOnScroll } from "@/components/shared/RevealOnScroll";
 import { StaggerReveal } from "@/components/shared/StaggerReveal";
@@ -72,19 +73,14 @@ export default async function DepartmentDetailPage({ params }: Props) {
       {/* Hero */}
       <section
         className="relative overflow-hidden bg-stone-950"
-        style={{ minHeight: "480px" }}
+        style={{ minHeight: "540px" }}
       >
-        {deptImg && (
-          <div
-            className="absolute inset-0 bg-cover bg-center opacity-40"
-            style={{ backgroundImage: `url('${deptImg}')` }}
-          />
-        )}
+        {deptImg && <ParallaxHeroBg image={deptImg} opacity={0.4} />}
         <div
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(135deg, rgba(26,20,16,0.72) 0%, rgba(26,20,16,0.48) 100%)",
+              "linear-gradient(135deg, rgba(26,20,16,0.62) 0%, rgba(26,20,16,0.40) 100%)",
           }}
         />
         <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
@@ -94,9 +90,9 @@ export default async function DepartmentDetailPage({ params }: Props) {
           style={{
             fontSize: "clamp(120px, 20vw, 240px)",
             fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 700,
+            fontWeight: 800,
             color: "transparent",
-            WebkitTextStroke: "1px rgba(232,130,12,0.08)",
+            WebkitTextStroke: "1.5px rgba(232,130,12,0.14)",
             lineHeight: 1,
             letterSpacing: "-0.04em",
           }}
@@ -143,6 +139,13 @@ export default async function DepartmentDetailPage({ params }: Props) {
             )}
           </div>
 
+          <span
+            className="block w-8 h-0.5 bg-saffron mb-4"
+            style={{
+              opacity: 0,
+              animation: "fadeUp 0.7s 0.15s ease-out forwards",
+            }}
+          />
           <h1
             className="font-display text-white mb-4"
             style={{

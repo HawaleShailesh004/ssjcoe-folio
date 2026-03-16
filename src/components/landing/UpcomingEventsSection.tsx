@@ -8,11 +8,11 @@ interface Props {
 }
 
 const TYPE_COLOR: Record<string, string> = {
-  technical: "bg-blue-50 text-blue-700 border-blue-200",
-  cultural: "bg-pink-50 text-pink-700 border-pink-200",
-  sports: "bg-green-50 text-green-700 border-green-200",
-  official: "bg-stone-100 text-stone-600 border-stone-200",
-  workshop: "bg-amber-50 text-amber-700 border-amber-200",
+  technical: "badge-saffron",
+  cultural: "badge-idle",
+  sports: "badge-idle",
+  official: "badge-idle",
+  workshop: "badge-saffron",
 };
 
 function formatDate(dateStr: string) {
@@ -84,7 +84,7 @@ export function UpcomingEventsSection({ events }: Props) {
                   <div className="flex-1 min-w-0 py-1">
                     <div className="flex flex-wrap items-center gap-2 mb-1.5">
                       <span
-                        className={`badge capitalize ${TYPE_COLOR[event.type] ?? "badge badge-idle"}`}
+                        className={`badge capitalize ${TYPE_COLOR[event.type] ?? "badge-idle"}`}
                       >
                         {event.type}
                       </span>

@@ -1,10 +1,8 @@
-import {
-  getResearchPapers,
-  getResearchCategories,
-  getResearchYears,
-} from "@/lib/research";
+import { getResearchPapers } from "@/lib/research";
 import { getDepartments } from "@/lib/stats";
 import { ResearchClient } from "@/components/research/ResearchClient";
+import { PageHero } from "@/components/shared/PageHero";
+import { IMAGES } from "@/lib/images";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,19 +11,31 @@ export const metadata: Metadata = {
 };
 
 export default async function ResearchPage() {
-  const [papers, categories, years, departments] = await Promise.all([
+  const [papers, departments] = await Promise.all([
     getResearchPapers(),
-    getResearchCategories(),
-    getResearchYears(),
     getDepartments(),
   ]);
 
+  const totalCitations = papers.reduce((s, p) => s + (p.citations ?? 0), 0);
+  const yearsActive = new Set(papers.map((p) => p.year)).size;
+
   return (
-    <ResearchClient
-      initialPapers={papers}
-      categories={categories}
-      years={years}
-      departments={departments}
-    />
+    <>
+      <PageHero
+        title="Research"
+        subtitle="Published papers, journal articles, and conference proceedings from SSJCOE faculty and students."
+        ghostText="RESEARCH"
+        image={IMAGES.campus_ai}
+        crumbs={[{ label: "Home", href: "/" }, { label: "Research" }]}
+        stats={[
+          { value: `${papers.length}+`, label: "Papers published" },
+          { value: String(yearsActive), label: "Years active" },
+          { value: String(totalCitations), label: "Total citations" },
+        ]}
+      />
+      <div className="container section">
+        <ResearchClient papers={papers} departments={departments} />
+      </div>
+    </>
   );
 }

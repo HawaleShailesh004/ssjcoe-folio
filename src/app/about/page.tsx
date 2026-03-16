@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IMAGES } from "@/lib/images";
+import { ParallaxHeroBg } from "@/components/shared/ParallaxHeroBg";
 import { RevealOnScroll } from "@/components/shared/RevealOnScroll";
 import { StaggerReveal } from "@/components/shared/StaggerReveal";
 import { SafeImage } from "@/components/shared/SafeImage";
@@ -56,27 +57,24 @@ export default function AboutPage() {
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
         className="relative overflow-hidden bg-stone-950"
-        style={{ minHeight: "400px" }}
+        style={{ minHeight: "460px" }}
       >
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: `url('${IMAGES.campus_about}')` }}
-        />
+        <ParallaxHeroBg image={IMAGES.campus_about} opacity={0.2} />
         <div
           className="absolute inset-0"
-          style={{ background: "linear-gradient(135deg, rgba(12,10,9,0.95) 0%, rgba(12,10,9,0.80) 100%)" }}
+          style={{ background: "linear-gradient(135deg, rgba(12,10,9,0.88) 0%, rgba(12,10,9,0.70) 100%)" }}
         />
         <div className="absolute inset-0 bg-grain opacity-25 pointer-events-none" />
 
-        {/* Ghost text */}
+        {/* Ghost text — bolder */}
         <div
           className="absolute right-0 bottom-0 select-none pointer-events-none leading-none"
           style={{
             fontSize: "clamp(80px, 14vw, 180px)",
             fontFamily: "'Cormorant Garamond', serif",
-            fontWeight: 700,
+            fontWeight: 800,
             color: "transparent",
-            WebkitTextStroke: "1px rgba(232,130,12,0.07)",
+            WebkitTextStroke: "1.5px rgba(232,130,12,0.14)",
             letterSpacing: "-0.04em",
           }}
         >
