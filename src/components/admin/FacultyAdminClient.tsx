@@ -112,7 +112,7 @@ export default function FacultyAdminClient({ faculty, profile }: Props) {
     <div className="max-w-5xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-stone-800" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Faculty</h1>
+          <h1 className="font-display text-2xl font-semibold text-stone-800">Faculty</h1>
           <p className="text-stone-500 text-sm">{profile.departments?.name}</p>
         </div>
         <button type="button" onClick={openAdd} className="flex items-center gap-2 bg-[#E8820C] hover:bg-[#d4750b] text-white text-sm font-medium px-4 py-2.5 rounded-lg transition-colors">

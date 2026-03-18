@@ -117,8 +117,7 @@ export default function UsersClient({
       <div className="flex items-center justify-between">
         <div>
           <h1
-            className="text-2xl font-semibold text-stone-800"
-            style={{ fontFamily: "Cormorant Garamond, serif" }}
+            className="font-display text-2xl font-semibold text-stone-800"
           >
             HOD Accounts
           </h1>

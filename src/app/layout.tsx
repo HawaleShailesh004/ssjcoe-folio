@@ -1,8 +1,31 @@
 import type { Metadata } from "next";
+import { Outfit, Cormorant_Garamond, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { ScrollProgress } from "@/components/shared/ScrollProgress";
 import { LayoutShell } from "@/components/layout/LayoutShell";
 import { Toaster } from "@/components/ui/sonner";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-outfit",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  variable: "--font-jetbrains",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -36,7 +59,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${outfit.variable} ${cormorant.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
+    >
       <body suppressHydrationWarning>
         <ScrollProgress />
         <LayoutShell>{children}</LayoutShell>
@@ -44,7 +71,7 @@ export default function RootLayout({
           position="bottom-right"
           toastOptions={{
             style: {
-              fontFamily: "'Outfit', sans-serif",
+              fontFamily: "var(--font-outfit), system-ui, sans-serif",
               fontSize: "13px",
             },
           }}

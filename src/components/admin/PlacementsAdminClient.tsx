@@ -113,7 +113,7 @@ export default function PlacementsAdminClient({ placements, profile }: Props) {
     <div className="max-w-5xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-stone-800" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Placements</h1>
+          <h1 className="font-display text-2xl font-semibold text-stone-800">Placements</h1>
           <p className="text-stone-500 text-sm">{profile.departments?.name}</p>
         </div>
         <div className="flex items-center gap-2">

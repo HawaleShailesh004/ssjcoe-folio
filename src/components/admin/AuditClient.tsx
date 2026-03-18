@@ -62,7 +62,7 @@ export default function AuditClient({ logs }: Props) {
   return (
     <div className="max-w-5xl mx-auto space-y-4">
       <div>
-        <h1 className="text-2xl font-semibold text-stone-800" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Audit Log</h1>
+        <h1 className="font-display text-2xl font-semibold text-stone-800">Audit Log</h1>
         <p className="text-stone-500 text-sm">Last 200 actions across all departments</p>
       </div>
 

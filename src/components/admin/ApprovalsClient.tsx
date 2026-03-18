@@ -68,7 +68,7 @@ export default function ApprovalsClient({ items, reviewerId }: Props) {
   if (items.length === 0) {
     return (
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-2xl font-semibold text-stone-800 mb-6" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Approvals</h1>
+        <h1 className="font-display text-2xl font-semibold text-stone-800 mb-6">Approvals</h1>
         <div className="bg-white border border-stone-200 rounded-xl p-12 text-center">
           <CheckCircle className="w-10 h-10 text-green-400 mx-auto mb-3" />
           <p className="text-stone-500">All caught up. No pending approvals.</p>
@@ -80,7 +80,7 @@ export default function ApprovalsClient({ items, reviewerId }: Props) {
   return (
     <div className="max-w-4xl mx-auto space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-stone-800" style={{ fontFamily: 'Cormorant Garamond, serif' }}>Approvals</h1>
+        <h1 className="font-display text-2xl font-semibold text-stone-800">Approvals</h1>
         <span className="bg-amber-100 text-amber-700 text-sm font-medium px-3 py-1 rounded-full">{items.length} pending</span>
       </div>
 

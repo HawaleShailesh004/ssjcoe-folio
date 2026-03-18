@@ -70,10 +70,10 @@ export default function AdminLoginPage() {
           <div className="inline-flex justify-center mb-4">
             <Logo size="header" link={false} />
           </div>
-          <p className="text-stone-500 text-xs tracking-widest uppercase mb-2" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+          <p className="font-mono text-stone-500 text-xs tracking-widest uppercase mb-2">
             Admin Portal
           </p>
-          <h1 className="text-stone-200 text-xl font-medium" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
+          <h1 className="font-display text-stone-200 text-xl font-medium">
             Sign in to continue
           </h1>
         </div>

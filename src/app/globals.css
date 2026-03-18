@@ -47,7 +47,7 @@
   - Hardcoded hex values in component files
 */
 
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+/* Fonts loaded via next/font in src/app/layout.tsx (--font-outfit, --font-cormorant, --font-jetbrains) */
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -89,10 +89,10 @@
   --color-idle-bg: #F2EDE8;
   --color-idle-border: #D4CEC9;
 
-  /* Type */
-  --font-sans: 'Outfit', system-ui, sans-serif;
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  /* Type — resolved from next/font in layout (--font-outfit, --font-cormorant, --font-jetbrains) */
+  --font-sans: var(--font-outfit), system-ui, sans-serif;
+  --font-display: var(--font-cormorant), Georgia, serif;
+  --font-mono: var(--font-jetbrains), monospace;
 
   --font-size-2xs: 10px;
   --font-size-xs: 11px;
