@@ -3,6 +3,17 @@ export type ContentStatus = 'draft' | 'pending' | 'approved' | 'rejected';
 
 export type UserRole = 'hod' | 'superadmin' | 'platform_admin';
 
+export interface Profile {
+  id: string;
+  email: string;
+  full_name: string | null;
+  role: UserRole;
+  dept_id: string | null;
+  avatar_url: string | null;
+  is_active: boolean;
+  created_at: string;
+}
+
 export type AchievementLevel = 'institute' | 'state' | 'national' | 'international';
 
 export type EventType = 'technical' | 'cultural' | 'sports' | 'official' | 'workshop';

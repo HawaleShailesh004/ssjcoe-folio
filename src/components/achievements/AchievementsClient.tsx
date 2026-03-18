@@ -6,6 +6,7 @@ import { PaginationBar } from "@/components/shared/PaginationBar";
 import { FilterBar } from "@/components/shared/FilterBar";
 import { EmptyState } from "@/components/shared/EmptyState";
 import { AchievementCard } from "@/components/achievements/AchievementCard";
+import { AchievementDetailModal } from "@/components/achievements/AchievementDetailModal";
 import type {
   Achievement,
   Department,
@@ -44,6 +45,8 @@ export function AchievementsClient({
   const [type, setType] = useState<AchievementType | "all">("all");
   const [level, setLevel] = useState<AchievementLevel | "all">("all");
   const [deptId, setDeptId] = useState("all");
+  const [selectedAchievement, setSelectedAchievement] =
+    useState<Achievement | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -190,11 +193,19 @@ export function AchievementsClient({
         <div ref={resultsRef}>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {paginated.map((a) => (
-              <AchievementCard
+              <div
                 key={a.id}
-                achievement={a}
-                department={departments.find((d) => d.id === a.dept_id)}
-              />
+                role="button"
+                tabIndex={0}
+                onClick={() => setSelectedAchievement(a)}
+                onKeyDown={(ev) => ev.key === "Enter" && setSelectedAchievement(a)}
+                className="cursor-pointer"
+              >
+                <AchievementCard
+                  achievement={a}
+                  department={departments.find((d) => d.id === a.dept_id)}
+                />
+              </div>
             ))}
           </div>
           <PaginationBar
@@ -211,6 +222,14 @@ export function AchievementsClient({
             pageSize={9}
           />
         </div>
+      )}
+
+      {selectedAchievement && (
+        <AchievementDetailModal
+          achievement={selectedAchievement}
+          department={departments.find((d) => d.id === selectedAchievement.dept_id)}
+          onClose={() => setSelectedAchievement(null)}
+        />
       )}
     </>
   );

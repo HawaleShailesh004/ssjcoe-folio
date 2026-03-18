@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ScrollProgress } from "@/components/shared/ScrollProgress";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
+import { LayoutShell } from "@/components/layout/LayoutShell";
 import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
@@ -40,9 +39,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
         <ScrollProgress />
-        <Header />
-        <main className="pt-14">{children}</main>
-        <Footer />
+        <LayoutShell>{children}</LayoutShell>
         <Toaster
           position="bottom-right"
           toastOptions={{

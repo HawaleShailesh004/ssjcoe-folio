@@ -5,6 +5,7 @@ import { Search, X, Calendar, Clock } from "lucide-react";
 import { usePagination } from "@/hooks/usePagination";
 import { PaginationBar } from "@/components/shared/PaginationBar";
 import { EventCard } from "@/components/events/EventCard";
+import { EventDetailModal } from "@/components/events/EventDetailModal";
 import type { Event, Department } from "@/types";
 
 interface Props {
@@ -24,6 +25,7 @@ export function EventsClient({ initialEvents: events, departments }: Props) {
   const [search, setSearch] = useState("");
   const [type, setType] = useState("");
   const [deptId, setDeptId] = useState("");
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const upcoming = useMemo(
@@ -66,13 +68,15 @@ export function EventsClient({ initialEvents: events, departments }: Props) {
     [pool, search, type, deptId],
   );
 
+  const PAGE_SIZE_UPCOMING = 12;
+  const PAGE_SIZE_PAST = 9;
   const {
     page,
     setPage,
     totalPages,
     paginated,
     reset,
-  } = usePagination(filtered, 9);
+  } = usePagination(filtered, tab === "upcoming" ? PAGE_SIZE_UPCOMING : PAGE_SIZE_PAST);
 
   const hasFilters = search || type || deptId;
   const dept = (id: string) => departments.find((d) => d.id === id);
@@ -265,7 +269,7 @@ export function EventsClient({ initialEvents: events, departments }: Props) {
             ) : (
               <div className="max-w-2xl">
                 <div className="flex flex-col">
-                  {filtered.map((event, i) => {
+                  {paginated.map((event, i) => {
                     const d = new Date(event.date);
                     const day = d.toLocaleDateString("en-IN", {
                       day: "2-digit",
@@ -285,7 +289,11 @@ export function EventsClient({ initialEvents: events, departments }: Props) {
                     return (
                       <div
                         key={event.id}
-                        className="group flex items-start gap-6 py-5 border-b border-stone-100 last:border-0 hover:bg-white -mx-2 px-2 rounded-xl transition-colors cursor-default"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => setSelectedEvent(event)}
+                        onKeyDown={(ev) => ev.key === "Enter" && setSelectedEvent(event)}
+                        className="group flex items-start gap-6 py-5 border-b border-stone-100 last:border-0 hover:bg-white -mx-2 px-2 rounded-xl transition-colors cursor-pointer"
                       >
                         <div
                           className="shrink-0 w-14 text-center rounded-xl py-2 border"
@@ -371,6 +379,19 @@ export function EventsClient({ initialEvents: events, departments }: Props) {
                     );
                   })}
                 </div>
+                <PaginationBar
+                  page={page}
+                  totalPages={totalPages}
+                  onPageChange={(p) => {
+                    setPage(p);
+                    resultsRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                      block: "start",
+                    });
+                  }}
+                  totalItems={filtered.length}
+                  pageSize={PAGE_SIZE_UPCOMING}
+                />
               </div>
             ))}
 
@@ -393,11 +414,19 @@ export function EventsClient({ initialEvents: events, departments }: Props) {
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {paginated.map((event) => (
-                  <EventCard
+                  <div
                     key={event.id}
-                    event={event}
-                    department={dept(event.dept_id)}
-                  />
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => setSelectedEvent(event)}
+                    onKeyDown={(ev) => ev.key === "Enter" && setSelectedEvent(event)}
+                    className="cursor-pointer"
+                  >
+                    <EventCard
+                      event={event}
+                      department={dept(event.dept_id)}
+                    />
+                  </div>
                 ))}
               </div>
             ))}
@@ -414,11 +443,19 @@ export function EventsClient({ initialEvents: events, departments }: Props) {
                 });
               }}
               totalItems={filtered.length}
-              pageSize={9}
+              pageSize={PAGE_SIZE_PAST}
             />
           )}
         </div>
       </div>
+
+      {selectedEvent && (
+        <EventDetailModal
+          event={selectedEvent}
+          department={dept(selectedEvent.dept_id)}
+          onClose={() => setSelectedEvent(null)}
+        />
+      )}
     </div>
   );
 }
