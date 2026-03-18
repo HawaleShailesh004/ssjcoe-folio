@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/lib/supabase-browser'
 import { Eye, EyeOff, Lock, Mail, AlertCircle } from 'lucide-react'
+import { Logo } from '@/components/shared/Logo'
 
 export default function AdminLoginPage() {
   const router = useRouter()
@@ -64,21 +65,14 @@ export default function AdminLoginPage() {
         style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, #E8820C 1px, transparent 0)', backgroundSize: '32px 32px' }} />
 
       <div className="relative w-full max-w-sm">
-        {/* Logo */}
+        {/* Logo — same as header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 bg-[#E8820C] rounded flex items-center justify-center">
-              <span className="font-bold text-white text-lg" style={{ fontFamily: 'Cormorant Garamond, serif' }}>S</span>
-            </div>
-            <div>
-              <div className="text-white font-semibold tracking-wide" style={{ fontFamily: 'Cormorant Garamond, serif', fontSize: '1.1rem' }}>
-                SSJCOE <span className="text-[#E8820C]">FOLIO</span>
-              </div>
-              <div className="text-stone-500 text-xs tracking-widest uppercase" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-                Admin Portal
-              </div>
-            </div>
+          <div className="inline-flex justify-center mb-4">
+            <Logo size="header" link={false} />
           </div>
+          <p className="text-stone-500 text-xs tracking-widest uppercase mb-2" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+            Admin Portal
+          </p>
           <h1 className="text-stone-200 text-xl font-medium" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
             Sign in to continue
           </h1>
